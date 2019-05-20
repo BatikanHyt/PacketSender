@@ -7,8 +7,8 @@ static QMutex staticMutex;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context ,const QString &msg)
 {
-	QMutexLocker locker(&staticMutex);
-	QTextEdit* logWidget = PacketSender::getLogWidget();
+	//QMutexLocker locker(&staticMutex);
+	
 	QString debugText = "<TD><font color = 'green'><b>Debug : < / b>< / font>< / TD><TD>";
 	QString infoText = "<TD><font color = 'green'><b>Info : < / b>< / font>< / TD><TD>";
 	QString warningText = "<TD><font color = 'orange'><b>Warning : < / b>< / font>< / TD><TD>";
@@ -42,9 +42,10 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context ,const QS
 		finalString = fatalText;
 		break;
 	}
-	if (logWidget)
+	if (PacketSender::getLogWidget())
 	{
-		logWidget->append(finalString);
+		finalString.remove('"');
+		PacketSender::getLogWidget()->generateLogSignal(finalString);
 	}
 }
 

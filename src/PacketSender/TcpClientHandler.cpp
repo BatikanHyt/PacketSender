@@ -33,7 +33,7 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 		this,
 		&TcpClientHandler::handleDisconnected);
 
-	tcpSocket->setProperty("SocketId", mSocketId);
+	tcpSocket->setProperty("socketId", mSocketId);
 	tcpSocket->connectToHost(hostAddr, port);
 
 	qInfo() << tr("Trying to connect remote server on %1:%2.")
@@ -64,10 +64,18 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	return false;
 }
 
-void TcpClientHandler::writeIt()
+void TcpClientHandler::writeIt(QByteArray &data)
 {
 	qDebug() << "Test";
-	mSocketMap;
+	QString dataStr = data.constData();
+	qDebug() << "Data is: " << dataStr;
+	QTcpSocket* tcpSocket = mSocketMap.value(0);
+	if (0 != tcpSocket)
+	{
+		//qDebug() << "interface id: "<<mInterfaceId << " socket id: "<<socketId<<" data read in tcprelayclient: " << data;
+		tcpSocket->write(data);
+		tcpSocket->flush();
+	}
 }
 
 

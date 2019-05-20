@@ -31,15 +31,15 @@ void TcpServerHandler::createTcpServerInternal()
 	bool result = mTcpServer->listen(QHostAddress(mHostAddress), mListenPort);
 	if (result)
 	{
-		/*qInfo() << tr("Tcp server is listening on %1:%2")
+		qInfo() << tr("Tcp server is listening on %1:%2")
 			.arg(mHostAddress)
-			.arg(mListenPort);*/
+			.arg(mListenPort);
 	}
 	else
 	{
-	/*	qWarning() << tr("Tcp server could not listen on %1:%2")
+		qWarning() << tr("Tcp server could not listen on %1:%2")
 			.arg(mHostAddress)
-			.arg(mListenPort);*/
+			.arg(mListenPort);
 	}
 }
 
@@ -58,9 +58,9 @@ void TcpServerHandler::handleNewConnection()
 		connect(tcpSocket, &QTcpSocket::disconnected, this, &TcpServerHandler::handleDisconnected);
 		connect(tcpSocket, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error), this, &TcpServerHandler::handleError);
 
-		/*qInfo() << tr("New client connected to the Tcp server on %1:%2.")
+		qInfo() << tr("New client connected to the Tcp server on %1:%2.")
 			.arg(tcpSocket->localAddress().toString())
-			.arg(tcpSocket->localPort());*/
+			.arg(tcpSocket->localPort());
 		int port = tcpSocket->localPort();
 
 	}
@@ -68,7 +68,14 @@ void TcpServerHandler::handleNewConnection()
 
 void TcpServerHandler::handleReadyRead()
 {
+	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
+	if (0 != tcpSocket)
+	{
+		quint32 socketId = tcpSocket->property("socketId").toUInt();
 
+		QByteArray data = tcpSocket->readAll();
+		qInfo() << QString("Data read from client: ") << data;
+	}
 }
 
 void TcpServerHandler::handleDisconnected()
@@ -76,15 +83,15 @@ void TcpServerHandler::handleDisconnected()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		/*qInfo() << QString("Client disconnected from TCP server on %1:%2.")
+		qInfo() << QString("Client disconnected from TCP server on %1:%2.")
 			.arg(tcpSocket->localAddress().toString())
-			.arg(tcpSocket->localPort());*/
+			.arg(tcpSocket->localPort());
 		quint32 socketId = tcpSocket->property("socketId").toUInt();
 		mSocketMap.remove(socketId);
 		tcpSocket->disconnect();
 		tcpSocket->close();
 		tcpSocket->deleteLater();
-		/*qDebug() << "Disconnected socket id " << socketId;*/
+		qDebug() << "Disconnected socket id " << socketId;
 
 	}
 }
@@ -94,7 +101,7 @@ void TcpServerHandler::handleError(QAbstractSocket::SocketError socketError)
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		/*qWarning() << tcpSocket->errorString();*/
+		qWarning() << tcpSocket->errorString();
 	}
 }
 

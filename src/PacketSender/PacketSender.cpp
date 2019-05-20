@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-QTextEdit* PacketSender::mLogWidget;
+LogWidget* PacketSender::mLoggerWidget;
 
 PacketSender::PacketSender(QWidget *parent)
 	: QMainWindow(parent)
@@ -11,11 +11,10 @@ PacketSender::PacketSender(QWidget *parent)
 
 	mPackWidget = new PacketSenderWidget();
 	mConWidget = new ConnectionWidget();
-	if (mLogWidget == 0)
+	if (mLoggerWidget == 0)
 	{
-		mLogWidget = new QTextEdit();
+		mLoggerWidget = new LogWidget();
 	}
-	mLogWidget->setReadOnly(true);
 
 	connect(mConWidget,
 		&ConnectionWidget::clientConnectedEvent,
@@ -27,16 +26,20 @@ PacketSender::PacketSender(QWidget *parent)
 		mConWidget,
 		&ConnectionWidget::writeToTcp);
 
+	connect(mLoggerWidget,
+		&LogWidget::emitLogEvent,
+		mLoggerWidget,
+		&LogWidget::logInternal);
+
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(mPackWidget,0,0);
 	layout->addWidget(mConWidget,0,1);
-	layout->addWidget(mLogWidget,1,0,1,0);
+	layout->addWidget(mLoggerWidget,1,0,1,0);
 
 	ui.centralWidget->setLayout(layout);
 }
 
-
-QTextEdit* PacketSender::getLogWidget()
+LogWidget* PacketSender::getLogWidget()
 {
-	return mLogWidget;
+	return mLoggerWidget;
 }

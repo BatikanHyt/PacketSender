@@ -2,6 +2,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QDir>
 #include "TcpClientHandler.h"
+#include <QtCore/QByteArray>
 
 PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	: QWidget(parent)
@@ -56,10 +57,12 @@ void PacketSenderWidget::on_pbLoadFile_clicked()
 		quint64 size = fileInfo.size();
 		fileHash.insert(fileName, size);
 	}
+	ui.twFileList->clear();
 	updateFileWidget(fileHash);
 }
 
 void PacketSenderWidget::on_pbStartTransfer_clicked()
 {
-	emit writeTcpSocket();
+	QByteArray data = ui.leData->text().toUtf8();
+	emit writeTcpSocket(data);
 }

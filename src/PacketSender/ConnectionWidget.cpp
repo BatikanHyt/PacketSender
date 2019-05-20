@@ -54,7 +54,7 @@ void ConnectionWidget::createTcpServer(QString hostAddress, int portNumber)
 	mTcpServerHandler->createTcpServer();
 }
 
-void ConnectionWidget::writeToTcp()
+void ConnectionWidget::writeToTcp(QByteArray &data)
 {
-	mTcpClientHandler->writeIt();
+	mTcpClientHandler->writeIt(data);
 }

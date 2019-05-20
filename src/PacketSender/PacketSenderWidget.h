@@ -17,7 +17,7 @@ public:
 
 signals:
 
-	void writeTcpSocket();
+	void writeTcpSocket(QByteArray &data);
 
 public slots:
 

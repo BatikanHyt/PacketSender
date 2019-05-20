@@ -30,7 +30,7 @@ public slots:
 
 	void handleDisconnected();
 
-	void writeIt();
+	void writeIt(QByteArray &data);
 
 private:
 

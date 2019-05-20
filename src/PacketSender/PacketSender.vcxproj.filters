@@ -48,6 +48,9 @@
     <ClCompile Include="TcpClientHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LogWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h">
@@ -65,6 +68,9 @@
     <QtMoc Include="TcpServerHandler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="LogWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PacketSender.ui">
@@ -74,6 +80,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ConnectionWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="LogWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

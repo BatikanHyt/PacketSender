@@ -5,6 +5,7 @@
 
 #include "PacketSenderWidget.h"
 #include "ConnectionWidget.h"
+#include "LogWidget.h"
 #include <QtWidgets/QTextEdit>
 
 class QTreeWidget;
@@ -16,7 +17,7 @@ public:
 
 	PacketSender(QWidget *parent = Q_NULLPTR);
 
-	static QTextEdit* getLogWidget();
+	static LogWidget* getLogWidget();
 
 private:
 
@@ -26,6 +27,6 @@ private:
 
 	ConnectionWidget* mConWidget;
 
-	static QTextEdit* mLogWidget;
+	static LogWidget* mLoggerWidget;
 
 };
