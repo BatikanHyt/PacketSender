@@ -69,7 +69,7 @@ void TcpClientHandler::writeIt(QByteArray &data)
 	qDebug() << "Test";
 	QString dataStr = data.constData();
 	qDebug() << "Data is: " << dataStr;
-	QTcpSocket* tcpSocket = mSocketMap.value(0);
+	QTcpSocket* tcpSocket = mSocketMap.begin().value();
 	if (0 != tcpSocket)
 	{
 		//qDebug() << "interface id: "<<mInterfaceId << " socket id: "<<socketId<<" data read in tcprelayclient: " << data;
