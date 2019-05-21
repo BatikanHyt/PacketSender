@@ -28,6 +28,9 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Messages">
+      <UniqueIdentifier>{a177ef91-4370-4b42-885d-d39f221f7006}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -49,6 +52,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LogWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSenderMessages.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDataMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="FileStartMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="FileEndMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,5 +108,25 @@
     <QtRcc Include="PacketSender.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileSenderMessageType.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSenderMessages.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDataMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="FileStartMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEndMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -29,7 +29,9 @@ public slots:
 
 	void on_pbConnect_clicked();
 
-	void writeToTcp(QByteArray &data);
+	void onWriteToTcpClient(QByteArray &data);
+
+	void onWriteToTcpServer(QByteArray &data);
 
 private:
 

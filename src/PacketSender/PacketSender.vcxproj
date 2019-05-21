@@ -114,6 +114,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConnectionWidget.cpp" />
+    <ClCompile Include="FileDataMessage.cpp" />
+    <ClCompile Include="FileEndMessage.cpp" />
+    <ClCompile Include="FileSender.cpp" />
+    <ClCompile Include="FileSenderMessages.cpp" />
+    <ClCompile Include="FileStartMessage.cpp" />
     <ClCompile Include="LogWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PacketSender.cpp" />
@@ -160,6 +165,14 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileDataMessage.h" />
+    <ClInclude Include="FileEndMessage.h" />
+    <ClInclude Include="FileSender.h" />
+    <ClInclude Include="FileSenderMessages.h" />
+    <ClInclude Include="FileSenderMessageType.h" />
+    <ClInclude Include="FileStartMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

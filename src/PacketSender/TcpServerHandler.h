@@ -28,6 +28,8 @@ public:
 
 	void setListenPort(int port);
 
+	void writeToClient(QByteArray& data);
+
 public slots:
 
 	void handleNewConnection();

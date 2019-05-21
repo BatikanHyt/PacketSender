@@ -115,6 +115,12 @@ void TcpServerHandler::setListenPort(int port)
 	mListenPort = port;
 }
 
+void TcpServerHandler::writeToClient(QByteArray & data)
+{
+	QTcpSocket* clientSocket = mSocketMap.begin().value();
+	
+}
+
 void TcpServerHandler::createTcpServer()
 {
 	QMetaObject::invokeMethod(this,

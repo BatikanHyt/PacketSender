@@ -64,7 +64,7 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	return false;
 }
 
-void TcpClientHandler::writeIt(QByteArray &data)
+void TcpClientHandler::writeToSocket(QByteArray &data)
 {
 	qDebug() << "Test";
 	QString dataStr = data.constData();

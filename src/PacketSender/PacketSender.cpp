@@ -24,7 +24,13 @@ PacketSender::PacketSender(QWidget *parent)
 	connect(mPackWidget,
 		&PacketSenderWidget::writeTcpSocket,
 		mConWidget,
-		&ConnectionWidget::writeToTcp);
+		&ConnectionWidget::onWriteToTcpClient);
+
+
+	/*connect(mPackWidget,
+		&PacketSenderWidget::writeTcpSocket,
+		mConWidget,
+		&ConnectionWidget::onWriteToTcpServer);*/
 
 	connect(mLoggerWidget,
 		&LogWidget::emitLogEvent,

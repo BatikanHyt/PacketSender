@@ -3,6 +3,7 @@
 #include <QtCore/QDir>
 #include "TcpClientHandler.h"
 #include <QtCore/QByteArray>
+#include <QtCore/QDebug>
 
 PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	: QWidget(parent)
@@ -21,13 +22,15 @@ void PacketSenderWidget::updateFileWidget(QHash<QString,quint64> fileHash)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem();
 		QString fileName = i.key();
-		quint64 size = i.value() % 1024;
+		quint64 size = (i.value() / 1024) + 1;
 		item->setText(0, fileName);
 		item->setText(1, QString::number(size) + " KB");
 		item->setCheckState(0, Qt::Unchecked);
 
 		ui.twFileList->addTopLevelItem(item);
 	}
+	ui.twFileList->resizeColumnToContents(0);
+	ui.twFileList->resizeColumnToContents(1);
 }
 
 void PacketSenderWidget::onConnectionEstablished(QString info)
@@ -44,7 +47,7 @@ void PacketSenderWidget::onClientDisconnected(QString info)
 void PacketSenderWidget::on_pbLoadFile_clicked()
 {
 	QString directoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-		"/home",
+		QDir::homePath(),
 		QFileDialog::ShowDirsOnly
 		| QFileDialog::DontResolveSymlinks);
 
@@ -53,7 +56,7 @@ void PacketSenderWidget::on_pbLoadFile_clicked()
 	QHash<QString, quint64> fileHash;
 	foreach(QFileInfo fileInfo, fileInfoList)
 	{
-		QString fileName = fileInfo.completeBaseName();
+		QString fileName = fileInfo.baseName()+"."+fileInfo.completeSuffix();
 		quint64 size = fileInfo.size();
 		fileHash.insert(fileName, size);
 	}
@@ -63,6 +66,27 @@ void PacketSenderWidget::on_pbLoadFile_clicked()
 
 void PacketSenderWidget::on_pbStartTransfer_clicked()
 {
-	QByteArray data = ui.leData->text().toUtf8();
-	emit writeTcpSocket(data);
+	bool itemSelected = false;
+	QTreeWidgetItemIterator item(ui.twFileList);
+	if (ui.leData->text().isEmpty())
+	{
+		itemSelected = true;
+	}
+
+	while (*item)
+	{
+		if ((*item)->checkState(0) == Qt::Checked)
+		{
+			QString fileName = (*item)->text(0);
+			qDebug() << "Selected file names : " << fileName;
+			itemSelected = true;
+			
+		}
+		++item;
+	}
+	if (!itemSelected)
+	{
+		QByteArray data = ui.leData->text().toUtf8();
+		emit writeTcpSocket(data);
+	}
 }
