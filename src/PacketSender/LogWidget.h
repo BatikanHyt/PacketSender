@@ -17,6 +17,7 @@ public:
 signals:
 
 	void emitLogEvent(QString mgg);
+
 public slots:
 
 	void logInternal(QString msg);

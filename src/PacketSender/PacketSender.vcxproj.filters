@@ -31,6 +31,9 @@
     <Filter Include="Messages">
       <UniqueIdentifier>{a177ef91-4370-4b42-885d-d39f221f7006}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Handlers">
+      <UniqueIdentifier>{9be30345-3a19-47d0-8394-c2bf369a2fd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -67,6 +70,15 @@
       <Filter>Messages</Filter>
     </ClCompile>
     <ClCompile Include="FileSender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSenderHandler.cpp">
+      <Filter>Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDataHandler.cpp">
+      <Filter>Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileEndHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -126,6 +138,15 @@
       <Filter>Messages</Filter>
     </ClInclude>
     <ClInclude Include="FileSender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSenderHandler.h">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDataHandler.h">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileEndHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

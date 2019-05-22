@@ -15,6 +15,8 @@ public:
 
 	void updateFileWidget(QHash<QString, quint64> fileHash);
 
+	void initializeFileData(QString fileName);
+
 signals:
 
 	void writeTcpSocket(QByteArray &data);
@@ -29,7 +31,24 @@ public slots:
 
 	void on_pbStartTransfer_clicked();
 
+protected:
+
+	void timerEvent(QTimerEvent *event);
 private:
 
 	Ui::PacketSenderWidget ui;
+
+	QString mFilePath;
+
+	QHash<QString, QByteArray> mFileDataHash;
+
+	QHash<int, QString> mFileHash;
+
+	QHash<int, bool> mTransferFinished;
+
+	QHash<int, int> mFileProcess;
+
+	int mDataPartSize;
+
+	int mDelay;
 };

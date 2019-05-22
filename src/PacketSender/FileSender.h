@@ -11,7 +11,7 @@ public:
 
 	~FileSender();
 
-	void sendData(const QByteArray& data);
+	QByteArray sendData(QString fileName,const QByteArray& data);
 
 	void sendEnd(const QByteArray& data);
 

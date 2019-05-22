@@ -2,6 +2,16 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QThread>
+#include <QtCore/QFile>
+
+#include "FileSenderMessages.h"
+#include "FileDataMessage.h"
+#include "FileEndMessage.h"
+#include "FileStartMessage.h"
+#include "FileSenderMessageType.h"
+#include "FileSenderHandler.h"
+#include "FileDataHandler.h"
+#include "FileEndHandler.h"
 
 TcpServerHandler::TcpServerHandler()
 	: mTcpServer(0)
@@ -18,6 +28,9 @@ TcpServerHandler::TcpServerHandler()
 
 	moveToThread(mThread);
 	mThread->start();
+
+	mHandlerHash.insert(eFileTransferData, new FileDataHandler());
+	mHandlerHash.insert(eFileTransferEnd, new FileEndHandler());
 
 }
 
@@ -75,6 +88,28 @@ void TcpServerHandler::handleReadyRead()
 
 		QByteArray data = tcpSocket->readAll();
 		qInfo() << QString("Data read from client: ") << data;
+		//FileSenderMessages message;
+		FileSenderMessages message;
+		message.parseData(data);
+		
+		FileSenderMessageType messageType = message.getMessageType();
+		FileSenderHandler* handler = mHandlerHash.value(messageType);
+		if (handler != 0)
+		{
+			handler->handle(data);
+		}
+		//if (messageType == eFileTransferData)
+		//{
+		//	qDebug() << "Data message";
+		//}
+
+		//QFile sampleFile("ReceivedMessage");
+		//if (!sampleFile.open(QFile::WriteOnly | QFile::Append))
+		//{
+		//	return;
+		//}
+		//sampleFile.write(data);
+		//sampleFile.flush();
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "FileDataMessage.h"
 
-
+#include <QtCore/QVariant>
 
 FileDataMessage::FileDataMessage()
 	: FileSenderMessages()
@@ -52,18 +52,19 @@ QByteArray FileDataMessage::generateContent()
 	QByteArray data;
 	
 	QDataStream dataStream(&data, QIODevice::WriteOnly);
-	dataStream << mFileNameSize;
-	dataStream << mFileName;
-
-	data.append(mData);
+	dataStream << QVariant::fromValue(mFileName);
+	dataStream << QVariant::fromValue(mData);
 
 	return data;
 }
 
 void FileDataMessage::parseMessage(QDataStream & dataStream)
 {
-	dataStream >> mFileNameSize;
-	QByteArray fileName = mFileName.toUtf8();
-	dataStream.readRawData(fileName.data(), mFileNameSize);
-	dataStream >> mData;
+	QVariant fileName;
+	dataStream >> fileName;
+	mFileName = fileName.toString();
+	
+	QVariant data;
+	dataStream >> data;
+	mData = data.toByteArray();
 }

@@ -2,6 +2,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QDir>
 #include "TcpClientHandler.h"
+#include "FileSender.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 
@@ -46,12 +47,12 @@ void PacketSenderWidget::onClientDisconnected(QString info)
 
 void PacketSenderWidget::on_pbLoadFile_clicked()
 {
-	QString directoryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+	mFilePath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 		QDir::homePath(),
 		QFileDialog::ShowDirsOnly
 		| QFileDialog::DontResolveSymlinks);
 
-	QDir dir(directoryPath);
+	QDir dir(mFilePath);
 	QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files | QDir::NoDot | QDir::NoDotDot);
 	QHash<QString, quint64> fileHash;
 	foreach(QFileInfo fileInfo, fileInfoList)
@@ -80,7 +81,14 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 			QString fileName = (*item)->text(0);
 			qDebug() << "Selected file names : " << fileName;
 			itemSelected = true;
-			
+			initializeFileData(fileName);
+			mDelay = ui.sbMessageDelay->value();
+			mDataPartSize = ui.cbMessageSize->currentText().toInt();
+			int id = startTimer(mDelay);
+
+			mFileHash.insert(id, fileName);		
+			mFileProcess.insert(id, 0);
+			mTransferFinished.insert(id, false);
 		}
 		++item;
 	}
@@ -89,4 +97,54 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 		QByteArray data = ui.leData->text().toUtf8();
 		emit writeTcpSocket(data);
 	}
+}
+
+void PacketSenderWidget::timerEvent(QTimerEvent * event)
+{
+	int id = event->timerId();
+	FileSender fileSender;
+	QString fileName = mFileHash[id];
+	QByteArray fileData = mFileDataHash[fileName];
+
+	//QByteArray data = fileSender.sendData(fileName, fileData);
+	int totalSize = fileData.size();
+	int bytesWritten = mFileProcess[id];
+	if (mTransferFinished[id])
+	{
+		killTimer(id);
+		mFileDataHash.remove(fileName);
+		mFileHash.remove(id);
+		mTransferFinished.remove(id);
+	}
+	else
+	{
+		if (bytesWritten < totalSize)
+		{
+			QByteArray arr = fileData.mid(bytesWritten, mDataPartSize);
+			bytesWritten += arr.size();
+			QByteArray splitedFileData = fileSender.sendData(fileName, arr);
+			emit writeTcpSocket(splitedFileData);
+			mFileProcess[id] = bytesWritten;
+		}
+		else
+		{
+			mTransferFinished[id] = true;
+		}
+	}
+}
+
+
+void PacketSenderWidget::initializeFileData(QString fileName)
+{
+	QString absolutePath = mFilePath + "/" + fileName;
+	QFile fileToSend(absolutePath);
+	
+	QByteArray fileData;
+	if (!fileToSend.open(QIODevice::ReadOnly))
+	{
+		return;
+	}
+	fileData = fileToSend.readAll();
+	mFileDataHash.insert(fileName, fileData);
+	fileToSend.close();
 }

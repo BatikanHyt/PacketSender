@@ -38,9 +38,24 @@ FileSenderMessageType FileSenderMessages::getMessageType() const
 void FileSenderMessages::parseData(const QByteArray & data)
 {
 	QDataStream dataStream(data);
-	dataStream.operator>>((quint8&)mMessageType);
+	dataStream >> ((quint8&)mMessageType);
 	dataStream >> mContentSize;
 	parseMessage(dataStream);
+}
+
+int FileSenderMessages::getHeaderSize()
+{
+	return 3;
+}
+
+void FileSenderMessages::parseMessage(QDataStream & dataStream)
+{
+	dataStream.skipRawData(mContentSize);
+}
+
+QByteArray FileSenderMessages::generateContent()
+{
+	return QByteArray();
 }
 
 void FileSenderMessages::setMessageType(FileSenderMessageType messageType)

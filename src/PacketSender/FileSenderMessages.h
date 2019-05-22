@@ -19,11 +19,13 @@ public:
 
 	void parseData(const QByteArray& data);
 
+	static int getHeaderSize();
+
 protected:
 
-	virtual void parseMessage(QDataStream& dataStream) = 0;
+	virtual void parseMessage(QDataStream& dataStream);
 
-	virtual QByteArray generateContent() = 0;
+	virtual QByteArray generateContent();
 
 	void setMessageType(FileSenderMessageType messageType);
 
@@ -32,5 +34,6 @@ private:
 	quint16 mContentSize;
 
 	FileSenderMessageType mMessageType;
+
 };
 

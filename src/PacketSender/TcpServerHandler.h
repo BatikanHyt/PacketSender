@@ -4,11 +4,13 @@
 #include <QtCore/QHash>
 #include <QtNetwork/QAbstractSocket>
 #include <QtNetwork/QHostAddress>
+#include "FileSenderMessageType.h"
 
 class QThread;
 class QTcpSocket;
 class QTcpServer;
 class QAbstractSocket;
+class FileSenderHandler;
 
 class TcpServerHandler
 	:public QObject
@@ -57,6 +59,8 @@ private:
 	QTcpSocket* mTcpSocket;
 
 	quint32 mSocketId;
+
+	QHash<FileSenderMessageType, FileSenderHandler*> mHandlerHash;
 };
 
 
