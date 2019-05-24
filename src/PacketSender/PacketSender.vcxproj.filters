@@ -79,7 +79,7 @@
       <Filter>Handlers</Filter>
     </ClCompile>
     <ClCompile Include="FileEndHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Handlers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +147,7 @@
       <Filter>Handlers</Filter>
     </ClInclude>
     <ClInclude Include="FileEndHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Handlers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

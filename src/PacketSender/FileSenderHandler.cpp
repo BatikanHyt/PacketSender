@@ -1,6 +1,5 @@
+
 #include "FileSenderHandler.h"
-
-
 
 FileSenderHandler::FileSenderHandler()
 {

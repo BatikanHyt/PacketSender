@@ -1,3 +1,4 @@
+
 #include "FileDataMessage.h"
 
 #include <QtCore/QVariant>
@@ -15,7 +16,6 @@ FileDataMessage::FileDataMessage(const QByteArray & data)
 {
 	parseData(data);
 }
-
 
 FileDataMessage::~FileDataMessage()
 {

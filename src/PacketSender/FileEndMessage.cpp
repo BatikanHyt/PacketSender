@@ -1,4 +1,8 @@
+
 #include "FileEndMessage.h"
+
+#include <QtCore/QVariant>
+#include <QtCore/QDataStream>
 
 FileEndMessage::FileEndMessage()
 	: FileSenderMessages()
@@ -24,14 +28,18 @@ void FileEndMessage::setData(const QByteArray & data)
 QByteArray FileEndMessage::generateContent()
 {
 	QByteArray data;
-	data.append(mData);
+	QDataStream dataStream(&data, QIODevice::WriteOnly);
+	dataStream << QVariant::fromValue(mData);
 
 	return data;
 }
 
 void FileEndMessage::parseMessage(QDataStream & dataStream)
 {
-	dataStream >> mData;
+	QVariant data;
+	dataStream >> data;
+
+	mData = data.toByteArray();
 }
 
 const QByteArray & FileEndMessage::getData() const

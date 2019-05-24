@@ -8,6 +8,7 @@
 
 TcpClientHandler::TcpClientHandler()
 	: mSocketId(0)
+	, sendCount(0)
 {
 	mThread = new QThread(this);
 	moveToThread(mThread);
@@ -66,15 +67,21 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 
 void TcpClientHandler::writeToSocket(QByteArray &data)
 {
-	qDebug() << "Test";
+	//qDebug() << "Test";
 	QString dataStr = data.constData();
-	qDebug() << "Data is: " << dataStr;
+	//qDebug() << "Data is: " << dataStr;
 	QTcpSocket* tcpSocket = mSocketMap.begin().value();
 	if (0 != tcpSocket)
 	{
 		//qDebug() << "interface id: "<<mInterfaceId << " socket id: "<<socketId<<" data read in tcprelayclient: " << data;
-		tcpSocket->write(data);
+		int written = tcpSocket->write(data,data.size());
+		if (written != data.size())
+		{
+			qWarning() << "Could not write data.";
+		}
 		tcpSocket->flush();
+		tcpSocket->waitForBytesWritten(3000);
+		sendCount++;
 	}
 }
 
@@ -90,6 +97,10 @@ void TcpClientHandler::handleDisconnected()
 	if (0 != tcpSocket)
 	{
 		int socketId = tcpSocket->property("socketId").toInt();
+
+		qInfo() << QString("Unable to connect TCP server on %1:%2.")
+			.arg(tcpSocket->localAddress().toString())
+			.arg(tcpSocket->localPort());
 		qDebug() << tr("Deleting the socket with id %1").arg(socketId);
 		tcpSocket->disconnect();
 		tcpSocket->close();

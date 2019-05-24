@@ -26,7 +26,11 @@ QByteArray FileSender::sendData(QString fileName,const QByteArray & data)
 	return fileData;
 }
 
-void FileSender::sendEnd(const QByteArray& data)
+QByteArray FileSender::sendEnd(const QByteArray& data)
 {
-
+	QSharedPointer<FileEndMessage> message(new FileEndMessage());
+	message->setData(data);
+	QByteArray fileData = message->generateData();
+	
+	return fileData;
 }

@@ -1,9 +1,10 @@
+﻿
 #include "FileDataHandler.h"
-#include <QtCore/QSharedPointer>
 #include "FileDataMessage.h"
-#include <QtCore/QDebug>
 
 FileDataHandler::FileDataHandler()
+	:mCount(0)
+	,mPacketSizeRecv(0)
 {
 }
 
@@ -16,6 +17,18 @@ void FileDataHandler::handle(QByteArray & data)
 {
 	QSharedPointer<FileDataMessage> message(new FileDataMessage(data));
 
-	qDebug() << "File Name : " << message->getFileName() << "FileSize : " << message->getData();
+	mFileName = message->getFileName();
+	mData = message->getData();
+	mCount++;
+	mPacketSizeRecv += mData.size();
+}
 
+QByteArray FileDataHandler::getParsedData()
+{
+	return mData;
+}
+
+QString FileDataHandler::getFileName()
+{
+	return mFileName;
 }

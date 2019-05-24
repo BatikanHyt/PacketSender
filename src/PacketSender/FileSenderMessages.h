@@ -5,6 +5,11 @@
 
 #include "FileSenderMessageType.h"
 
+/*
+	Message Definition
+	< MessageType(1Byte) | ContentLenght(2Byte) | Content(Binary) >
+*/
+
 class FileSenderMessages
 {
 public:
@@ -36,4 +41,3 @@ private:
 	FileSenderMessageType mMessageType;
 
 };
-

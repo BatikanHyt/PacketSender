@@ -1,8 +1,16 @@
+
 #pragma once
 #include "FileSenderMessages.h"
-class FileEndMessage :
-	public FileSenderMessages
+
+/*
+	End Message Content Definition
+	< FileName(Binary) >
+*/
+
+class FileEndMessage 
+	: public FileSenderMessages
 {
+
 public:
 
 	FileEndMessage();
@@ -24,4 +32,3 @@ private:
 
 	QByteArray mData;
 };
-

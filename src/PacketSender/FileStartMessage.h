@@ -1,13 +1,17 @@
+
 #pragma once
 #include "FileSenderMessages.h"
 #include <QtCore/QDataStream>
-class FileStartMessage :
-	public FileSenderMessages
+
+class FileStartMessage 
+	: public FileSenderMessages
 {
 public:
+
 	FileStartMessage();
 
 	FileStartMessage(const QByteArray& data);
+
 	~FileStartMessage();
 
 	void setData(const QByteArray &data);
@@ -33,4 +37,3 @@ private:
 
 	QByteArray mData;
 };
-

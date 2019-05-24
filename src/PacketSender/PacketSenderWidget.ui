@@ -122,7 +122,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="sbMessageDelay"/>
+         <widget class="QSpinBox" name="sbMessageDelay">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

@@ -1,6 +1,5 @@
+
 #include "FileStartMessage.h"
-
-
 
 FileStartMessage::FileStartMessage()
 	: FileSenderMessages()
@@ -9,7 +8,6 @@ FileStartMessage::FileStartMessage()
 {
 	setMessageType(eFileTransferStart);
 }
-
 
 FileStartMessage::FileStartMessage(const QByteArray & data)
 	: FileSenderMessages()

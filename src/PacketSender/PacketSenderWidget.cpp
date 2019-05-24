@@ -115,6 +115,8 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 		mFileDataHash.remove(fileName);
 		mFileHash.remove(id);
 		mTransferFinished.remove(id);
+		QByteArray endMessage = fileSender.sendEnd(fileName.toUtf8());
+		emit writeTcpSocket(endMessage);
 	}
 	else
 	{
@@ -128,6 +130,7 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 		}
 		else
 		{
+			qDebug() << "Total Byte written :" << QString::number(bytesWritten);
 			mTransferFinished[id] = true;
 		}
 	}

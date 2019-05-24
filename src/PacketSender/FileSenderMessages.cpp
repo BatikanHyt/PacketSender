@@ -1,6 +1,6 @@
+
 #include "FileSenderMessages.h"
 #include <QDataStream>
-
 
 FileSenderMessages::FileSenderMessages()
 	: mMessageType(eFileTransferInvalid)
@@ -38,7 +38,7 @@ FileSenderMessageType FileSenderMessages::getMessageType() const
 void FileSenderMessages::parseData(const QByteArray & data)
 {
 	QDataStream dataStream(data);
-	dataStream >> ((quint8&)mMessageType);
+	dataStream.operator>>((quint8&)mMessageType);
 	dataStream >> mContentSize;
 	parseMessage(dataStream);
 }

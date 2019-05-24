@@ -3,6 +3,11 @@
 #include "FileSenderMessages.h"
 #include <QtCore/QDataStream>
 
+/*
+	Data Message Content Definition
+	< FileNameSize(1Byte) | FileName(Binary) | FileData(Binary) >
+*/
+
 class FileDataMessage
 	: public FileSenderMessages
 {
@@ -36,4 +41,3 @@ private:
 
 	QString mFileName;
 };
-

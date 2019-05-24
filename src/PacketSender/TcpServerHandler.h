@@ -44,6 +44,8 @@ public slots:
 
 	void createTcpServerInternal();
 
+	void saveToFile(QString fileName);
+
 private:
 
 	QString mHostAddress;
@@ -61,6 +63,12 @@ private:
 	quint32 mSocketId;
 
 	QHash<FileSenderMessageType, FileSenderHandler*> mHandlerHash;
+
+	QHash<QString, QByteArray> mFileDataBuffer;
+	
+	int testCount;
+
+	int totalPacket;
 };
 
 
