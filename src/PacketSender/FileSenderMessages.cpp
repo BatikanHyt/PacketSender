@@ -48,6 +48,11 @@ int FileSenderMessages::getHeaderSize()
 	return 3;
 }
 
+quint16 FileSenderMessages::getContentSize()
+{
+	return mContentSize;
+}
+
 void FileSenderMessages::parseMessage(QDataStream & dataStream)
 {
 	dataStream.skipRawData(mContentSize);

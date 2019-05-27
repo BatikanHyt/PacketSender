@@ -5,9 +5,11 @@
 #include "FileSender.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
+#include <QtCore/QHashIterator>
 
 PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	: QWidget(parent)
+	, mUseTcp(false)
 {
 	ui.setupUi(this);
 }
@@ -34,9 +36,10 @@ void PacketSenderWidget::updateFileWidget(QHash<QString,quint64> fileHash)
 	ui.twFileList->resizeColumnToContents(1);
 }
 
-void PacketSenderWidget::onConnectionEstablished(QString info)
+void PacketSenderWidget::onConnectionEstablished(QString protocol ,QString info)
 {
-	ui.cbConnectionList->addItem(info);
+	mConnectionList.insert(info, protocol);
+	initializeConnectionList();
 }
 
 void PacketSenderWidget::onClientDisconnected(QString info)
@@ -67,6 +70,15 @@ void PacketSenderWidget::on_pbLoadFile_clicked()
 
 void PacketSenderWidget::on_pbStartTransfer_clicked()
 {
+	if (ui.rbUseTcp->isChecked())
+	{
+		mUseTcp = true;
+	}
+	else if (ui.rbUseUdp->isChecked())
+	{
+		mUseTcp = false;
+	}
+	
 	bool itemSelected = false;
 	QTreeWidgetItemIterator item(ui.twFileList);
 	if (ui.leData->text().isEmpty())
@@ -95,8 +107,25 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 	if (!itemSelected)
 	{
 		QByteArray data = ui.leData->text().toUtf8();
-		emit writeTcpSocket(data);
+		if (mUseTcp)
+		{
+			emit writeTcpSocket(data);
+		}
+		else
+		{
+			emit writeUdpSocket(data);
+		}
 	}
+}
+
+void PacketSenderWidget::on_rbUseTcp_clicked()
+{
+	initializeConnectionList();
+}
+
+void PacketSenderWidget::on_rbUseUdp_clicked()
+{
+	initializeConnectionList();
 }
 
 void PacketSenderWidget::timerEvent(QTimerEvent * event)
@@ -116,7 +145,14 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 		mFileHash.remove(id);
 		mTransferFinished.remove(id);
 		QByteArray endMessage = fileSender.sendEnd(fileName.toUtf8());
-		emit writeTcpSocket(endMessage);
+		if (mUseTcp)
+		{
+			emit writeTcpSocket(endMessage);
+		}
+		else
+		{
+			emit writeUdpSocket(endMessage);
+		}
 	}
 	else
 	{
@@ -125,7 +161,14 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 			QByteArray arr = fileData.mid(bytesWritten, mDataPartSize);
 			bytesWritten += arr.size();
 			QByteArray splitedFileData = fileSender.sendData(fileName, arr);
-			emit writeTcpSocket(splitedFileData);
+			if (mUseTcp)
+			{
+				emit writeTcpSocket(splitedFileData);
+			}
+			else
+			{
+				emit writeUdpSocket(splitedFileData);
+			}
 			mFileProcess[id] = bytesWritten;
 		}
 		else
@@ -136,6 +179,31 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 	}
 }
 
+void PacketSenderWidget::initializeConnectionList()
+{
+	ui.cbConnectionList->clear();
+	QHash<QString, QString>::iterator i;
+	for (i = mConnectionList.begin(); i != mConnectionList.end(); ++i)
+	{
+		if (ui.rbUseTcp->isChecked())
+		{
+			if (i.value().contains("TCP"))
+			{
+				ui.cbConnectionList->addItem(i.key());
+			}
+		}
+		else if (ui.rbUseUdp->isChecked())
+		{
+			if (ui.rbUseUdp->isChecked())
+			{
+				if (i.value().contains("UDP"))
+				{
+					ui.cbConnectionList->addItem(i.key());
+				}
+			}
+		}
+	}
+}
 
 void PacketSenderWidget::initializeFileData(QString fileName)
 {

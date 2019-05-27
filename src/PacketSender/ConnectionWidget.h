@@ -7,6 +7,7 @@
 class QHostAddress;
 class TcpClientHandler;
 class TcpServerHandler;
+class UdpHandler;
 
 class ConnectionWidget : public QWidget
 {
@@ -21,9 +22,13 @@ public:
 
 	void createTcpServer(QString hostAddress, int port);
 
+	void createUdpSocket(QString hostAddress, QString unicastAddress ,int port);
+
 signals:
 
-	void clientConnectedEvent(QString info);
+	void clientConnectedEvent(QString protocol, QString info);
+
+	void clientDisconnectedEvent(QString protocol, QString info);
 
 public slots:
 
@@ -33,6 +38,14 @@ public slots:
 
 	void onWriteToTcpServer(QByteArray &data);
 
+	void onClientDisconnected(QString protocol, QString info);
+
+	void on_rbUdp_clicked();
+
+	void on_rbTcp_clicked();
+
+	void onWriteToUdpSocket(QByteArray& data);
+
 private:
 
 	Ui::ConnectionWidget ui;
@@ -40,4 +53,6 @@ private:
 	TcpClientHandler* mTcpClientHandler;
 
 	TcpServerHandler* mTcpServerHandler;
+
+	UdpHandler* mUdpHandler;
 };

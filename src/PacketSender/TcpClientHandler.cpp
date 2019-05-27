@@ -37,7 +37,7 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	tcpSocket->setProperty("socketId", mSocketId);
 	tcpSocket->connectToHost(hostAddr, port);
 
-	qInfo() << tr("Trying to connect remote server on %1:%2.")
+	qInfo() << tr("Trying to connect remote server on %1:%2...")
 		.arg(hostAddr)
 		.arg(port);
 
@@ -67,13 +67,10 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 
 void TcpClientHandler::writeToSocket(QByteArray &data)
 {
-	//qDebug() << "Test";
 	QString dataStr = data.constData();
-	//qDebug() << "Data is: " << dataStr;
 	QTcpSocket* tcpSocket = mSocketMap.begin().value();
 	if (0 != tcpSocket)
 	{
-		//qDebug() << "interface id: "<<mInterfaceId << " socket id: "<<socketId<<" data read in tcprelayclient: " << data;
 		int written = tcpSocket->write(data,data.size());
 		if (written != data.size())
 		{
@@ -96,14 +93,19 @@ void TcpClientHandler::handleDisconnected()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		int socketId = tcpSocket->property("socketId").toInt();
 
-		qInfo() << QString("Unable to connect TCP server on %1:%2.")
-			.arg(tcpSocket->localAddress().toString())
-			.arg(tcpSocket->localPort());
+		int socketId = tcpSocket->property("socketId").toInt();
+		qInfo() << QString("Disconnected to TCP server on %1:%2.")
+			.arg(mSocketMap[socketId]->localAddress().toString())
+			.arg(mSocketMap[socketId]->localPort());
+
 		qDebug() << tr("Deleting the socket with id %1").arg(socketId);
+
 		tcpSocket->disconnect();
 		tcpSocket->close();
 		tcpSocket->deleteLater();
+		
+		mSocketMap[socketId]->deleteLater();
+		mSocketMap.remove(socketId);
 	}
 }

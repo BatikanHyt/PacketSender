@@ -5,7 +5,7 @@ LogWidget::LogWidget(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-
+	ui.teLogWindow->setReadOnly(true);
 }
 
 LogWidget::~LogWidget()

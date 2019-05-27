@@ -128,6 +128,7 @@
     <ClCompile Include="PacketSenderWidget.cpp" />
     <ClCompile Include="TcpClientHandler.cpp" />
     <ClCompile Include="TcpServerHandler.cpp" />
+    <ClCompile Include="UdpHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h" />
@@ -182,6 +183,10 @@
     <ClInclude Include="FileSenderMessages.h" />
     <ClInclude Include="FileSenderMessageType.h" />
     <ClInclude Include="FileStartMessage.h" />
+    <QtMoc Include="UdpHandler.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

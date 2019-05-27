@@ -81,6 +81,9 @@
     <ClCompile Include="FileEndHandler.cpp">
       <Filter>Handlers</Filter>
     </ClCompile>
+    <ClCompile Include="UdpHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="LogWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UdpHandler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

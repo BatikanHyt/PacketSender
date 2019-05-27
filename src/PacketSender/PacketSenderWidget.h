@@ -21,9 +21,11 @@ signals:
 
 	void writeTcpSocket(QByteArray &data);
 
+	void writeUdpSocket(QByteArray &data);
+
 public slots:
 
-	void onConnectionEstablished(QString information);
+	void onConnectionEstablished(QString protocolName, QString information);
 
 	void onClientDisconnected(QString information);
 
@@ -31,9 +33,16 @@ public slots:
 
 	void on_pbStartTransfer_clicked();
 
+	void on_rbUseTcp_clicked();
+
+	void on_rbUseUdp_clicked();
+
 protected:
 
 	void timerEvent(QTimerEvent *event);
+
+	void initializeConnectionList();
+
 private:
 
 	Ui::PacketSenderWidget ui;
@@ -51,4 +60,8 @@ private:
 	int mDataPartSize;
 
 	int mDelay;
+
+	bool mUseTcp;
+
+	QHash<QString, QString> mConnectionList;
 };

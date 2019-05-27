@@ -22,7 +22,7 @@ public:
 
 signals:
 
-	void clientConnectedEvent();
+	void clientSocketDisconnectedEvent(QString protocol, QString info);
 
 public slots:
 

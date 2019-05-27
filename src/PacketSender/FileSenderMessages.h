@@ -26,6 +26,8 @@ public:
 
 	static int getHeaderSize();
 
+	quint16 getContentSize();
+
 protected:
 
 	virtual void parseMessage(QDataStream& dataStream);

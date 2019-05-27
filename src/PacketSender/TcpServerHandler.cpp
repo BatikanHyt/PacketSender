@@ -23,8 +23,6 @@ TcpServerHandler::TcpServerHandler()
 	, testCount(0)
 	, totalPacket(0)
 {
-	QDir dir;
-	dir.mkpath("ReceivedMessages");
 
 	mThread = new QThread(this);
 	mTcpServer = new QTcpServer(this);
@@ -106,7 +104,7 @@ void TcpServerHandler::handleReadyRead()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		while (tcpSocket->bytesAvailable() > 0)
+		//while (tcpSocket->bytesAvailable() > 0)
 		{
 			quint32 socketId = tcpSocket->property("socketId").toUInt();
 			tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
@@ -121,6 +119,7 @@ void TcpServerHandler::handleReadyRead()
 				handler->handle(data);
 				QString fileName = handler->getFileName();
 				QByteArray fileData = handler->getParsedData();
+				//qDebug() << "Received packet data size : " << fileData.size();
 				testCount += fileData.size();
 				if (messageType == eFileTransferData)
 				{

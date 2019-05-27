@@ -21,11 +21,20 @@ PacketSender::PacketSender(QWidget *parent)
 		mPackWidget,
 		&PacketSenderWidget::onConnectionEstablished);
 
+	connect(mConWidget,
+		&ConnectionWidget::clientDisconnectedEvent,
+		mPackWidget,
+		&PacketSenderWidget::onClientDisconnected);
+
 	connect(mPackWidget,
 		&PacketSenderWidget::writeTcpSocket,
 		mConWidget,
 		&ConnectionWidget::onWriteToTcpClient);
 
+	connect(mPackWidget,
+		&PacketSenderWidget::writeUdpSocket,
+		mConWidget,
+		&ConnectionWidget::onWriteToUdpSocket);
 
 	/*connect(mPackWidget,
 		&PacketSenderWidget::writeTcpSocket,

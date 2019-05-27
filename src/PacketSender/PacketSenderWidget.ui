@@ -46,6 +46,9 @@
           <property name="editable">
            <bool>true</bool>
           </property>
+          <property name="currentText">
+           <string>4096</string>
+          </property>
           <item>
            <property name="text">
             <string>1000</string>
@@ -129,6 +132,12 @@
           <property name="maximum">
            <number>9999</number>
           </property>
+          <property name="singleStep">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <number>10</number>
+          </property>
          </widget>
         </item>
        </layout>
@@ -202,7 +211,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QRadioButton" name="radioButton">
+         <widget class="QRadioButton" name="rbUseTcp">
           <property name="text">
            <string>TCP</string>
           </property>
@@ -212,7 +221,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="radioButton_2">
+         <widget class="QRadioButton" name="rbUseUdp">
           <property name="text">
            <string>UDP</string>
           </property>
