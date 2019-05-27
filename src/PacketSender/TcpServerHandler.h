@@ -5,6 +5,7 @@
 #include <QtNetwork/QAbstractSocket>
 #include <QtNetwork/QHostAddress>
 #include "FileSenderMessageType.h"
+#include <QtCore/QMutex>
 
 class QThread;
 class QTcpSocket;
@@ -69,6 +70,8 @@ private:
 	int testCount;
 
 	int totalPacket;
+
+	QMutex mMutex;
 };
 
 

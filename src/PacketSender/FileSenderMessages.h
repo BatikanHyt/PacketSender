@@ -28,13 +28,15 @@ public:
 
 	quint16 getContentSize();
 
+	void setMessageType(FileSenderMessageType messageType);
+
+	void setContentSize(quint16 size);
+
 protected:
 
 	virtual void parseMessage(QDataStream& dataStream);
 
 	virtual QByteArray generateContent();
-
-	void setMessageType(FileSenderMessageType messageType);
 
 private:
 	

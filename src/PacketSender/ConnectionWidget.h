@@ -30,6 +30,8 @@ signals:
 
 	void clientDisconnectedEvent(QString protocol, QString info);
 
+	void udpSocketCreatedEvent(QString protocol,QString info);
+
 public slots:
 
 	void on_pbConnect_clicked();
@@ -45,6 +47,8 @@ public slots:
 	void on_rbTcp_clicked();
 
 	void onWriteToUdpSocket(QByteArray& data);
+
+	void onUdpSocketCreate(QString info);
 
 private:
 

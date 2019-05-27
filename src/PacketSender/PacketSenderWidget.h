@@ -37,6 +37,8 @@ public slots:
 
 	void on_rbUseUdp_clicked();
 
+	void onUdpSocketCreatedEvent(QString protocolName, QString informarion);
+
 protected:
 
 	void timerEvent(QTimerEvent *event);

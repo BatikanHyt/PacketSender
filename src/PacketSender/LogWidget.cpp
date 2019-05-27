@@ -17,6 +17,11 @@ void LogWidget::generateLogSignal(const QString & msg)
 	emit emitLogEvent(msg);
 }
 
+void LogWidget::on_pbClearLog_clicked()
+{
+	ui.teLogWindow->clear();
+}
+
 void LogWidget::logInternal(QString msg)
 {
 	ui.teLogWindow->append(msg);

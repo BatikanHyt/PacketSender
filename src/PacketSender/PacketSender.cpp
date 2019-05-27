@@ -36,6 +36,11 @@ PacketSender::PacketSender(QWidget *parent)
 		mConWidget,
 		&ConnectionWidget::onWriteToUdpSocket);
 
+	connect(mConWidget,
+		&ConnectionWidget::udpSocketCreatedEvent,
+		mPackWidget,
+		&PacketSenderWidget::onUdpSocketCreatedEvent);
+
 	/*connect(mPackWidget,
 		&PacketSenderWidget::writeTcpSocket,
 		mConWidget,

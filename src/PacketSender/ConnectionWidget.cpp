@@ -19,6 +19,11 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
 		this,
 		&ConnectionWidget::onClientDisconnected);
 
+	connect(mUdpHandler,
+		&UdpHandler::udpSocketCreated,
+		this,
+		&ConnectionWidget::onUdpSocketCreate);
+
 	ui.lHost->setVisible(false);
 	ui.leHost->setVisible(false);
 
@@ -114,4 +119,9 @@ void ConnectionWidget::on_rbTcp_clicked()
 void ConnectionWidget::onWriteToUdpSocket(QByteArray & data)
 {
 	mUdpHandler->writeDataToUdpSocket(data);
+}
+
+void ConnectionWidget::onUdpSocketCreate(QString info)
+{
+	emit udpSocketCreatedEvent("UDP",info);
 }

@@ -67,3 +67,8 @@ void FileSenderMessages::setMessageType(FileSenderMessageType messageType)
 {
 	mMessageType = messageType;
 }
+
+void FileSenderMessages::setContentSize(quint16 size)
+{
+	mContentSize = size;
+}

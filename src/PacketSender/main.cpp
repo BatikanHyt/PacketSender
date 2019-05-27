@@ -2,18 +2,18 @@
 #include <QtWidgets/QApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QMutex>
-
+#include <QtCore/QDateTime>
 static QMutex staticMutex;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context ,const QString &msg)
 {
-	//QMutexLocker locker(&staticMutex);
-	
-	QString debugText = "<TD><font color = 'green'><b>Debug : < / b>< / font>< / TD><TD>";
-	QString infoText = "<TD><font color = 'green'><b>Info : < / b>< / font>< / TD><TD>";
-	QString warningText = "<TD><font color = 'orange'><b>Warning : < / b>< / font>< / TD><TD>";
-	QString criticalText = "<TD><font color = 'red'><b>Critical : < / b>< / font>< / TD><TD>";
-	QString fatalText = "<TD><font color = 'red'><b>Fatal : < / b>< / font>< / TD><TD>";
+	QMutexLocker locker(&staticMutex);
+	QString currentTime = QDateTime::currentDateTimeUtc().toString("hh:mm:ss");
+	QString debugText = QString("<TD><font color = 'green'><b>(%1) Debug : < / b>< / font>< / TD><TD>").arg(currentTime);
+	QString infoText = QString("<TD><font color = 'green'><b>(%1) Info : < / b>< / font>< / TD><TD>").arg(currentTime);
+	QString warningText = QString("<TD><font color = 'orange'><b>(%1) Warning : < / b>< / font>< / TD><TD>").arg(currentTime);
+	QString criticalText = QString("<TD><font color = 'red'><b>(%1) Critical : < / b>< / font>< / TD><TD>").arg(currentTime);
+	QString fatalText = QString("<TD><font color = 'red'><b>(%1) Fatal : < / b>< / font>< / TD><TD>(%1)").arg(currentTime);
 	QString finalString;
 	switch (type) {
 	case QtDebugMsg:

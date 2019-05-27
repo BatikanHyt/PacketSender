@@ -29,6 +29,10 @@ public:
 
 	void initializeUdpSocket();
 
+signals:
+
+	void udpSocketCreated(QString info);
+
 protected:
 
 	virtual void timerEvent(QTimerEvent* timerEvent);

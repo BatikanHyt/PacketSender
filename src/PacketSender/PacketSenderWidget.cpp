@@ -128,6 +128,12 @@ void PacketSenderWidget::on_rbUseUdp_clicked()
 	initializeConnectionList();
 }
 
+void PacketSenderWidget::onUdpSocketCreatedEvent(QString protocolName, QString information)
+{
+	mConnectionList.insert(information, protocolName);
+	initializeConnectionList();
+}
+
 void PacketSenderWidget::timerEvent(QTimerEvent * event)
 {
 	int id = event->timerId();

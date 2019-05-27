@@ -22,6 +22,8 @@ public slots:
 
 	void logInternal(QString msg);
 
+	void on_pbClearLog_clicked();
+
 private:
 	Ui::LogWidget ui;
 };

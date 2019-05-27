@@ -104,49 +104,169 @@ void TcpServerHandler::handleReadyRead()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		//while (tcpSocket->bytesAvailable() > 0)
-		{
-			quint32 socketId = tcpSocket->property("socketId").toUInt();
-			tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-			QByteArray data = tcpSocket->readAll();
-			FileSenderMessages message;
-			message.parseData(data);
+		QByteArray mesTypeData;
+		QByteArray contentLengthType;
 
-			FileSenderMessageType messageType = message.getMessageType();
-			FileSenderHandler* handler = mHandlerHash.value(messageType);
-			if (handler != 0)
+		mesTypeData = tcpSocket->read(1);
+		contentLengthType = tcpSocket->read(2);
+		QDataStream stream1(mesTypeData);
+		QDataStream stream2(contentLengthType);
+		quint8 messageType;
+		quint16 contentLenght;
+
+		stream1 >> messageType;
+		stream2 >> contentLenght;
+		qint64 byteAvailable = tcpSocket->bytesAvailable();
+		if (messageType != 2)
+		{
+			while (tcpSocket->bytesAvailable() < contentLenght)
 			{
-				handler->handle(data);
-				QString fileName = handler->getFileName();
-				QByteArray fileData = handler->getParsedData();
-				//qDebug() << "Received packet data size : " << fileData.size();
-				testCount += fileData.size();
-				if (messageType == eFileTransferData)
-				{
-					totalPacket++;
-					if (mFileDataBuffer.contains(fileName))
-					{
-						mFileDataBuffer[fileName].append(fileData);
-					}
-					else
-					{
-						mFileDataBuffer.insert(fileName, fileData);
-					}
-				}
-				else if (messageType == eFileTransferEnd)
-				{
-					qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(testCount);
-					qDebug() << "Number of packet recv: " << totalPacket;
-					saveToFile(fileName);
-					totalPacket = 0;
-					testCount = 0;
-				}
-			}
-			else
-			{
-				qDebug("Unexpected");
+				byteAvailable = tcpSocket->bytesAvailable();
+				tcpSocket->waitForReadyRead(500);
 			}
 		}
+		QByteArray rawData;
+		rawData.append(mesTypeData);
+		rawData.append(contentLengthType);
+		rawData.append(tcpSocket->read(contentLenght));
+
+
+		FileSenderMessages message;
+		message.parseData(rawData);
+
+		FileSenderMessageType mesType = message.getMessageType();
+		FileSenderHandler* handler = mHandlerHash.value(mesType);
+		if (handler != 0)
+		{
+			handler->handle(rawData);
+			QString fileName = handler->getFileName();
+			QByteArray fileData = handler->getParsedData();
+			//qDebug() << "Received packet data size : " << fileData.size();
+			testCount += fileData.size();
+			if (messageType == eFileTransferData)
+			{
+				totalPacket++;
+				if (mFileDataBuffer.contains(fileName))
+				{
+					mFileDataBuffer[fileName].append(fileData);
+				}
+				else
+				{
+					mFileDataBuffer.insert(fileName, fileData);
+				}
+			}
+			else if (messageType == eFileTransferEnd)
+			{
+				qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(testCount);
+				qDebug() << "Number of packet recv: " << totalPacket;
+				saveToFile(fileName);
+				totalPacket = 0;
+				testCount = 0;
+			}
+		}
+		else
+		{
+			qWarning() << "Unexpected message type";
+		}
+
+		//QDataStream stream;
+		//stream.setDevice(tcpSocket);
+		//QVariant messageType;
+		//QVariant contentLenght;
+		//stream >> messageType;
+		//stream >> contentLenght;
+
+		//QByteArray rawData(contentLenght.toInt()+3, Qt::Uninitialized);
+		//QDataStream dataStream(&rawData,QIODevice::WriteOnly);
+		//dataStream << QVariant::fromValue(messageType);
+		//dataStream << QVariant::fromValue(contentLenght);
+		//QByteArray fileData(contentLenght.toInt(), Qt::Uninitialized);
+		//
+		//int byteAva = tcpSocket->bytesAvailable();
+		//while (byteAva < contentLenght.toInt());
+		//stream >> fileData;
+		//dataStream << fileData;
+		//FileSenderMessages message;
+		//message.parseData(rawData);
+
+		//FileSenderMessageType mesType = message.getMessageType();
+		//FileSenderHandler* handler = mHandlerHash.value(mesType);
+		//if (handler != 0)
+		//{
+		//	handler->handle(rawData);
+		//	QString fileName = handler->getFileName();
+		//	QByteArray fileData = handler->getParsedData();
+		//	//qDebug() << "Received packet data size : " << fileData.size();
+		//	testCount += fileData.size();
+		//	if (messageType == eFileTransferData)
+		//	{
+		//		totalPacket++;
+		//		if (mFileDataBuffer.contains(fileName))
+		//		{
+		//			mFileDataBuffer[fileName].append(fileData);
+		//		}
+		//		else
+		//		{
+		//			mFileDataBuffer.insert(fileName, fileData);
+		//		}
+		//	}
+		//	else if (messageType == eFileTransferEnd)
+		//	{
+		//		qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(testCount);
+		//		qDebug() << "Number of packet recv: " << totalPacket;
+		//		saveToFile(fileName);
+		//		totalPacket = 0;
+		//		testCount = 0;
+		//	}
+		//}
+		//else
+		//{
+		//	qWarning() << "Unexpected message type";
+		//}
+		//while (tcpSocket->bytesAvailable() > 0)
+		//{
+		//	quint8 mes
+		//	quint32 socketId = tcpSocket->property("socketId").toUInt();
+		//	tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+		//	QByteArray data = tcpSocket->readAll();
+		//	FileSenderMessages message;
+		//	message.parseData(data);
+
+		//	FileSenderMessageType messageType = message.getMessageType();
+		//	FileSenderHandler* handler = mHandlerHash.value(messageType);
+		//	if (handler != 0)
+		//	{
+		//		handler->handle(data);
+		//		QString fileName = handler->getFileName();
+		//		QByteArray fileData = handler->getParsedData();
+		//		//qDebug() << "Received packet data size : " << fileData.size();
+		//		testCount += fileData.size();
+		//		if (messageType == eFileTransferData)
+		//		{
+		//			totalPacket++;
+		//			if (mFileDataBuffer.contains(fileName))
+		//			{
+		//				mFileDataBuffer[fileName].append(fileData);
+		//			}
+		//			else
+		//			{
+		//				mFileDataBuffer.insert(fileName, fileData);
+		//			}
+		//		}
+		//		else if (messageType == eFileTransferEnd)
+		//		{
+		//			qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(testCount);
+		//			qDebug() << "Number of packet recv: " << totalPacket;
+		//			saveToFile(fileName);
+		//			totalPacket = 0;
+		//			testCount = 0;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		qDebug("Unexpected");
+		//	}
+		//}
 	}
 }
 

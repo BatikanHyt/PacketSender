@@ -91,6 +91,8 @@ void UdpHandler::createUdpSocketInternal()
 			QString("Udp socket bound successfully on %1:%2")
 			.arg(mHostAddress)
 			.arg(mUdpPort);
+		QString info = mUnicastAddress + ":" + QString::number(mUdpPort);
+		emit udpSocketCreated(info);
 	}
 	else
 	{
