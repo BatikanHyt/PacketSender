@@ -1,9 +1,9 @@
 #pragma once
 
-#include "FileSenderHandler.h"
+#include "PacketSenderHandler.h"
 
 class FileEndHandler 
-	: public FileSenderHandler
+	: public PacketSenderHandler
 {
 
 public:

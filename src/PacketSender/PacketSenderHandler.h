@@ -5,13 +5,13 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSharedPointer>
 
-class FileSenderHandler
+class PacketSenderHandler
 {
 public:
 
-	FileSenderHandler();
+	PacketSenderHandler();
 
-	~FileSenderHandler();
+	~PacketSenderHandler();
 
 	virtual void handle(QByteArray& data) = 0;
 

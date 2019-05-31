@@ -4,14 +4,14 @@
 #include <QtCore/QVariant>
 
 FileDataMessage::FileDataMessage()
-	: FileSenderMessages()
+	: PacketSenderMessage()
 	, mFileNameSize(0)
 {
 	setMessageType(eFileTransferData);
 }
 
 FileDataMessage::FileDataMessage(const QByteArray & data)
-	: FileSenderMessages()
+	: PacketSenderMessage()
 	, mFileNameSize(0)
 {
 	parseData(data);
@@ -52,19 +52,31 @@ QByteArray FileDataMessage::generateContent()
 	QByteArray data;
 	
 	QDataStream dataStream(&data, QIODevice::WriteOnly);
-	dataStream << QVariant::fromValue(mFileName);
-	dataStream << QVariant::fromValue(mData);
+	dataStream << mFileNameSize;
+	//dataStream << QVariant::fromValue(mFileName);
+	//dataStream << QVariant::fromValue(mData);
+	data.append(mFileName);
+	data.append(mData);
 
 	return data;
 }
 
 void FileDataMessage::parseMessage(QDataStream & dataStream)
 {
-	QVariant fileName;
-	dataStream >> fileName;
-	mFileName = fileName.toString();
-	
-	QVariant data;
-	dataStream >> data;
-	mData = data.toByteArray();
+	dataStream >> mFileNameSize;
+	QByteArray fileNameData(mFileNameSize,Qt::Uninitialized);
+	dataStream.readRawData(fileNameData.data(), mFileNameSize);
+	mFileName = fileNameData;
+	qint32 pos = dataStream.device()->pos();
+	qint32 size = dataStream.device()->size();
+	qint32 lenght = size - pos;
+	mData = QByteArray(lenght, Qt::Uninitialized);
+	dataStream.readRawData(mData.data(), lenght);
+	//QVariant fileName;
+	//dataStream >> fileName;
+	//mFileName = fileName.toString();
+	//
+	//QVariant data;
+	//dataStream >> data;
+	//mData = data.toByteArray();
 }

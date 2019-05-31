@@ -11,7 +11,7 @@ class QThread;
 class QTcpSocket;
 class QTcpServer;
 class QAbstractSocket;
-class FileSenderHandler;
+class PacketSenderHandler;
 
 class TcpServerHandler
 	:public QObject
@@ -63,7 +63,7 @@ private:
 
 	quint32 mSocketId;
 
-	QHash<FileSenderMessageType, FileSenderHandler*> mHandlerHash;
+	QHash<FileSenderMessageType, PacketSenderHandler*> mHandlerHash;
 
 	QHash<QString, QByteArray> mFileDataBuffer;
 	

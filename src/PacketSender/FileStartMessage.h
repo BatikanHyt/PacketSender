@@ -1,10 +1,10 @@
 
 #pragma once
-#include "FileSenderMessages.h"
+#include "PacketSenderMessage.h"
 #include <QtCore/QDataStream>
 
 class FileStartMessage 
-	: public FileSenderMessages
+	: public PacketSenderMessage
 {
 public:
 

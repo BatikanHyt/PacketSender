@@ -1,8 +1,8 @@
 #pragma once
-#include "FileSenderHandler.h"
+#include "PacketSenderHandler.h"
 #include <QtCore/QString>
 class FileDataHandler :
-	public FileSenderHandler
+	public PacketSenderHandler
 {
 
 public:

@@ -2,7 +2,7 @@
 #include "FileStartMessage.h"
 
 FileStartMessage::FileStartMessage()
-	: FileSenderMessages()
+	: PacketSenderMessage()
 	, mMessageSize(0)
 	, mMessageDelay(0)
 {
@@ -10,7 +10,7 @@ FileStartMessage::FileStartMessage()
 }
 
 FileStartMessage::FileStartMessage(const QByteArray & data)
-	: FileSenderMessages()
+	: PacketSenderMessage()
 	, mMessageDelay(0)
 	, mMessageSize(0)
 {

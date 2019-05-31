@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileSenderMessages.h"
+#include "PacketSenderMessage.h"
 #include <QtCore/QDataStream>
 
 /*
@@ -9,7 +9,7 @@
 */
 
 class FileDataMessage
-	: public FileSenderMessages
+	: public PacketSenderMessage
 {
 public:
 

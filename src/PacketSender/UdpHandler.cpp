@@ -1,10 +1,9 @@
 
 #include "UdpHandler.h"
 
-#include "FileSenderHandler.h"
-#include "FileSenderMessages.h"
+#include "PacketSenderHandler.h"
+#include "PacketSenderMessage.h"
 #include "FileSenderMessageType.h"
-#include "FileSenderHandler.h"
 #include "FileDataHandler.h"
 #include "FileEndHandler.h"
 
@@ -114,11 +113,11 @@ void UdpHandler::onReadyRead()
 			QByteArray readData(size, Qt::Uninitialized);
 			mUdpSocket->readDatagram(readData.data(), size);
 			
-			FileSenderMessages message;
+			PacketSenderMessage message;
 			message.parseData(readData);
 
 			FileSenderMessageType messageType = message.getMessageType();
-			FileSenderHandler *handler = mHandlerHash.value(messageType);
+			PacketSenderHandler *handler = mHandlerHash.value(messageType);
 
 			if (handler != 0)
 			{

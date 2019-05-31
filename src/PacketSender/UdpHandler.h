@@ -8,7 +8,7 @@
 #include "FileSenderMessageType.h"
 
 class QUdpSocket;
-class FileSenderHandler;
+class PacketSenderHandler;
 
 class UdpHandler
 	: public QObject
@@ -61,7 +61,7 @@ private:
 
 	QThread* mThread;
 
-	QHash<FileSenderMessageType, FileSenderHandler*> mHandlerHash;
+	QHash<FileSenderMessageType, PacketSenderHandler*> mHandlerHash;
 
 	QHash<QString, QByteArray> mFileDataBuffer;
 

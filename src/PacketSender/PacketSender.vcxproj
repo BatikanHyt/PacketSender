@@ -119,13 +119,15 @@
     <ClCompile Include="FileEndHandler.cpp" />
     <ClCompile Include="FileEndMessage.cpp" />
     <ClCompile Include="FileSender.cpp" />
-    <ClCompile Include="FileSenderHandler.cpp" />
-    <ClCompile Include="FileSenderMessages.cpp" />
+    <ClCompile Include="PacketSenderHandler.cpp" />
+    <ClCompile Include="PacketSenderMessage.cpp" />
     <ClCompile Include="FileStartMessage.cpp" />
     <ClCompile Include="LogWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PacketSender.cpp" />
     <ClCompile Include="PacketSenderWidget.cpp" />
+    <ClCompile Include="RawDataHandler.cpp" />
+    <ClCompile Include="RawDataMessage.cpp" />
     <ClCompile Include="TcpClientHandler.cpp" />
     <ClCompile Include="TcpServerHandler.cpp" />
     <ClCompile Include="UdpHandler.cpp" />
@@ -179,10 +181,12 @@
     <ClInclude Include="FileEndHandler.h" />
     <ClInclude Include="FileEndMessage.h" />
     <ClInclude Include="FileSender.h" />
-    <ClInclude Include="FileSenderHandler.h" />
-    <ClInclude Include="FileSenderMessages.h" />
+    <ClInclude Include="PacketSenderHandler.h" />
+    <ClInclude Include="PacketSenderMessage.h" />
     <ClInclude Include="FileSenderMessageType.h" />
     <ClInclude Include="FileStartMessage.h" />
+    <ClInclude Include="RawDataHandler.h" />
+    <ClInclude Include="RawDataMessage.h" />
     <QtMoc Include="UdpHandler.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>

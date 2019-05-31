@@ -7,5 +7,6 @@ enum FileSenderMessageType: quint8
 	eFileTransferInvalid,
 	eFileTransferStart,
 	eFileTransferEnd,
-	eFileTransferData
+	eFileTransferData,
+	eRawDataTransfer
 };

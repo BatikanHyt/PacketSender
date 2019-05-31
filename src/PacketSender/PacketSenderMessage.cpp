@@ -1,19 +1,19 @@
 
-#include "FileSenderMessages.h"
+#include "PacketSenderMessage.h"
 #include <QDataStream>
 
-FileSenderMessages::FileSenderMessages()
+PacketSenderMessage::PacketSenderMessage()
 	: mMessageType(eFileTransferInvalid)
 	, mContentSize(0)
 {
 }
 
 
-FileSenderMessages::~FileSenderMessages()
+PacketSenderMessage::~PacketSenderMessage()
 {
 }
 
-QByteArray FileSenderMessages::generateData()
+QByteArray PacketSenderMessage::generateData()
 {
 	QByteArray data;
 	QByteArray content;
@@ -30,12 +30,12 @@ QByteArray FileSenderMessages::generateData()
 	
 }
 
-FileSenderMessageType FileSenderMessages::getMessageType() const
+FileSenderMessageType PacketSenderMessage::getMessageType() const
 {
 	return mMessageType;
 }
 
-void FileSenderMessages::parseData(const QByteArray & data)
+void PacketSenderMessage::parseData(const QByteArray & data)
 {
 	QDataStream dataStream(data);
 	dataStream.operator>>((quint8&)mMessageType);
@@ -43,32 +43,32 @@ void FileSenderMessages::parseData(const QByteArray & data)
 	parseMessage(dataStream);
 }
 
-int FileSenderMessages::getHeaderSize()
+int PacketSenderMessage::getHeaderSize()
 {
 	return 3;
 }
 
-quint16 FileSenderMessages::getContentSize()
+quint16 PacketSenderMessage::getContentSize()
 {
 	return mContentSize;
 }
 
-void FileSenderMessages::parseMessage(QDataStream & dataStream)
+void PacketSenderMessage::parseMessage(QDataStream & dataStream)
 {
 	dataStream.skipRawData(mContentSize);
 }
 
-QByteArray FileSenderMessages::generateContent()
+QByteArray PacketSenderMessage::generateContent()
 {
 	return QByteArray();
 }
 
-void FileSenderMessages::setMessageType(FileSenderMessageType messageType)
+void PacketSenderMessage::setMessageType(FileSenderMessageType messageType)
 {
 	mMessageType = messageType;
 }
 
-void FileSenderMessages::setContentSize(quint16 size)
+void PacketSenderMessage::setContentSize(quint16 size)
 {
 	mContentSize = size;
 }

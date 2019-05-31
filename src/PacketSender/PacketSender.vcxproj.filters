@@ -57,9 +57,6 @@
     <ClCompile Include="LogWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSenderMessages.cpp">
-      <Filter>Messages</Filter>
-    </ClCompile>
     <ClCompile Include="FileDataMessage.cpp">
       <Filter>Messages</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     <ClCompile Include="FileSender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileSenderHandler.cpp">
-      <Filter>Handlers</Filter>
-    </ClCompile>
     <ClCompile Include="FileDataHandler.cpp">
       <Filter>Handlers</Filter>
     </ClCompile>
@@ -83,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="UdpHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketSenderMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="RawDataMessage.cpp">
+      <Filter>Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketSenderHandler.cpp">
+      <Filter>Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="RawDataHandler.cpp">
+      <Filter>Handlers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +137,6 @@
     <ClInclude Include="FileSenderMessageType.h">
       <Filter>Messages</Filter>
     </ClInclude>
-    <ClInclude Include="FileSenderMessages.h">
-      <Filter>Messages</Filter>
-    </ClInclude>
     <ClInclude Include="FileDataMessage.h">
       <Filter>Messages</Filter>
     </ClInclude>
@@ -146,13 +149,22 @@
     <ClInclude Include="FileSender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSenderHandler.h">
-      <Filter>Handlers</Filter>
-    </ClInclude>
     <ClInclude Include="FileDataHandler.h">
       <Filter>Handlers</Filter>
     </ClInclude>
     <ClInclude Include="FileEndHandler.h">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketSenderMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="RawDataMessage.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketSenderHandler.h">
+      <Filter>Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="RawDataHandler.h">
       <Filter>Handlers</Filter>
     </ClInclude>
   </ItemGroup>

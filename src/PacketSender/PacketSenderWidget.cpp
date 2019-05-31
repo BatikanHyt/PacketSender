@@ -107,13 +107,14 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 	if (!itemSelected)
 	{
 		QByteArray data = ui.leData->text().toUtf8();
+		QByteArray rawData = FileSender::sendRawData(data);
 		if (mUseTcp)
 		{
-			emit writeTcpSocket(data);
+			emit writeTcpSocket(rawData);
 		}
 		else
 		{
-			emit writeUdpSocket(data);
+			emit writeUdpSocket(rawData);
 		}
 	}
 }

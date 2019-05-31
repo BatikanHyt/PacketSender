@@ -11,9 +11,11 @@ public:
 
 	~FileSender();
 
-	QByteArray sendData(QString fileName,const QByteArray& data);
+	static QByteArray sendData(QString fileName,const QByteArray& data);
 
-	QByteArray sendEnd(const QByteArray& data);
+	static QByteArray sendEnd(const QByteArray& data);
+
+	static QByteArray sendRawData(const QByteArray& data);
 
 	void sendStart();
 

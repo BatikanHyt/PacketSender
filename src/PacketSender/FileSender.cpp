@@ -2,7 +2,8 @@
 #include "FileDataMessage.h"
 #include "FileStartMessage.h"
 #include "FileEndMessage.h"
-#include "FileSenderMessages.h"
+#include "PacketSenderMessage.h"
+#include "RawDataMessage.h"
 
 #include <QtCore/QSharedPointer>
 
@@ -33,4 +34,13 @@ QByteArray FileSender::sendEnd(const QByteArray& data)
 	QByteArray fileData = message->generateData();
 	
 	return fileData;
+}
+
+QByteArray FileSender::sendRawData(const QByteArray & data)
+{
+	QSharedPointer<RawDataMessage> message(new RawDataMessage());
+	message->setData(data);
+	QByteArray rawData = message->generateData();
+
+	return rawData;
 }

@@ -1,23 +1,16 @@
-
 #pragma once
 #include "PacketSenderMessage.h"
 
-/*
-	End Message Content Definition
-	< FileName(Binary) >
-*/
-
-class FileEndMessage 
+class RawDataMessage 
 	: public PacketSenderMessage
 {
-
 public:
 
-	FileEndMessage();
+	RawDataMessage();
 
-	FileEndMessage(const QByteArray& data);
+	RawDataMessage(const QByteArray& data);
 
-	~FileEndMessage();
+	~RawDataMessage();
 
 	void setData(const QByteArray &data);
 	const QByteArray& getData() const;
@@ -26,9 +19,10 @@ protected:
 
 	virtual QByteArray generateContent();
 
-	virtual void parseMessage(QDataStream& dataStream);
+	virtual void parseMessage(QDataStream &dataStream);
 
 private:
 
 	QByteArray mData;
 };
+

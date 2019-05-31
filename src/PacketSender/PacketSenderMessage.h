@@ -10,13 +10,13 @@
 	< MessageType(1Byte) | ContentLenght(2Byte) | Content(Binary) >
 */
 
-class FileSenderMessages
+class PacketSenderMessage
 {
 public:
 
-	FileSenderMessages();
+	PacketSenderMessage();
 
-	~FileSenderMessages();
+	~PacketSenderMessage();
 
 	QByteArray generateData();
 
