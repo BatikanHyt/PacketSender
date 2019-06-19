@@ -12,11 +12,11 @@ public:
 
 	~FileEndHandler();
 
-	virtual void handle(QByteArray& data);
+	virtual void handle(QByteArray& data) override;
 
-	virtual QString getFileName();
+	virtual QString getFileName() override;
 
-	virtual QByteArray getParsedData();
+	virtual QByteArray getParsedData() override;
 
 private:
 

@@ -71,6 +71,8 @@ private:
 
 	int totalPacket;
 
+	QByteArray mBuffer;
+
 	QMutex mMutex;
 };
 

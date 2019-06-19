@@ -96,6 +96,7 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 			initializeFileData(fileName);
 			mDelay = ui.sbMessageDelay->value();
 			mDataPartSize = ui.cbMessageSize->currentText().toInt();
+			mDataPartSize -= fileName.size();
 			int id = startTimer(mDelay);
 
 			mFileHash.insert(id, fileName);		
@@ -142,7 +143,6 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 	QString fileName = mFileHash[id];
 	QByteArray fileData = mFileDataHash[fileName];
 
-	//QByteArray data = fileSender.sendData(fileName, fileData);
 	int totalSize = fileData.size();
 	int bytesWritten = mFileProcess[id];
 	if (mTransferFinished[id])

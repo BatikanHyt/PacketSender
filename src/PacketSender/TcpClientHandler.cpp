@@ -67,7 +67,7 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 
 void TcpClientHandler::writeToSocket(QByteArray &data)
 {
-	QString dataStr = data.constData();
+	//QString dataStr = data.constData();
 	QTcpSocket* tcpSocket = mSocketMap.begin().value();
 	if (0 != tcpSocket)
 	{

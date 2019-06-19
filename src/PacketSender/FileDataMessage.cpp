@@ -53,8 +53,6 @@ QByteArray FileDataMessage::generateContent()
 	
 	QDataStream dataStream(&data, QIODevice::WriteOnly);
 	dataStream << mFileNameSize;
-	//dataStream << QVariant::fromValue(mFileName);
-	//dataStream << QVariant::fromValue(mData);
 	data.append(mFileName);
 	data.append(mData);
 
@@ -72,11 +70,4 @@ void FileDataMessage::parseMessage(QDataStream & dataStream)
 	qint32 lenght = size - pos;
 	mData = QByteArray(lenght, Qt::Uninitialized);
 	dataStream.readRawData(mData.data(), lenght);
-	//QVariant fileName;
-	//dataStream >> fileName;
-	//mFileName = fileName.toString();
-	//
-	//QVariant data;
-	//dataStream >> data;
-	//mData = data.toByteArray();
 }

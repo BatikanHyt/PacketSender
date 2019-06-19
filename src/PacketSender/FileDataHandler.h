@@ -9,11 +9,11 @@ public:
 	FileDataHandler();
 	~FileDataHandler();
 
-	virtual void handle(QByteArray& data);
+	virtual void handle(QByteArray& data) override; 
 
-	QByteArray getParsedData();
+	virtual QByteArray getParsedData() override;
 
-	QString getFileName();
+	virtual QString getFileName() override;
 
 private:
 

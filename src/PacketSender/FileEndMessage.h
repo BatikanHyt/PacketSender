@@ -24,9 +24,9 @@ public:
 
 protected:
 
-	virtual QByteArray generateContent();
+	virtual QByteArray generateContent() override;
 
-	virtual void parseMessage(QDataStream& dataStream);
+	virtual void parseMessage(QDataStream& dataStream) override;
 
 private:
 

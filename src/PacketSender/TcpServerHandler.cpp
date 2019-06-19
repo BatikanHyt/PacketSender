@@ -103,66 +103,36 @@ void TcpServerHandler::handleNewConnection()
 
 void TcpServerHandler::handleReadyRead()
 {
-	static QByteArray readBefore;
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
 		quint32 socketId = tcpSocket->property("socketId").toUInt();
 		tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-		//QByteArray data = tcpSocket->readAll();
 		QByteArray readData = tcpSocket->readAll();
-		readData.insert(0, readBefore);
-		readBefore.clear();
-		QDataStream dataStream(readData);
+		mBuffer.append(readData);
+		QDataStream dataStream(mBuffer);
+		QByteArray completePacket;
 
-		while(true)
+		while(mBuffer.size()>1)
 		{
-			//QByteArray messageId = tcpSocket->read(1);
-			//QByteArray contentLenght = tcpSocket->read(2);
 			quint16 len = 0;
 			quint8 mesId = 0;
 
 			dataStream >> mesId;
 			dataStream >> len;
 
-			QByteArray content(len, Qt::Uninitialized);
-			int readLength = dataStream.readRawData(content.data(), len);
-			if (readData.size() > len + 3)
+			QByteArray content(len+3, Qt::Uninitialized);
+			if (mBuffer.size() < len + 3)
 			{
-				readBefore.append(readData.mid(len + 3, readData.size()));
-				qWarning() << "Fazla geldi. Data size " << readData.size() << " len " << readLength;
-			}
-			else if (len > readLength)
-			{
-				readBefore.append(readData);
-				qWarning() << "Az geldi";
 				return;
 			}
-
-			//		QDataStream stream1(messageId);
-			//		QDataStream stream2(contentLenght);
-					//stream1 >> mesId;
-					//stream2 >> len;
-
-					/*
-					while (tcpSocket->bytesAvailable() < len)
-					{
-						tcpSocket->waitForReadyRead(500);
-					}
-					*/
-					//QByteArray rawData = tcpSocket->read(len);
-					//QByteArray data;
-					//data.append(messageId);
-					//data.append(contentLenght);
-					//data.append(rawData);
-					//PacketSenderMessage message;
-					//message.parseData(readData);
+			content = mBuffer.mid(0, len + 3);
 
 			FileSenderMessageType messageType = (FileSenderMessageType)mesId;
 			PacketSenderHandler* handler = mHandlerHash.value(messageType);
 			if (handler != 0)
 			{
-				handler->handle(readData);
+				handler->handle(content);
 				QString fileName = handler->getFileName();
 				QByteArray fileData = handler->getParsedData();
 				//qDebug() << "Received packet data size : " << fileData.size();
@@ -192,9 +162,9 @@ void TcpServerHandler::handleReadyRead()
 			{
 				qDebug("Unexpected message id.");
 			}
+			dataStream.skipRawData(len);
+			mBuffer.remove(0, len + 3);
 		}
-
-		
 	}
 }
 

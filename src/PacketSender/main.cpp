@@ -17,27 +17,22 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context ,const QS
 	QString finalString;
 	switch (type) {
 	case QtDebugMsg:
-		//fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 		debugText.append(msg);
 		finalString = debugText;
 		break;
 	case QtInfoMsg:
-		//fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 		infoText.append(msg);
 		finalString = infoText;
 		break;
 	case QtWarningMsg:
-		//fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 		warningText.append(msg);
 		finalString = warningText;
 		break;
 	case QtCriticalMsg:
-		//fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 		criticalText.append(msg);
 		finalString = criticalText;
 		break;
 	case QtFatalMsg:
-		//fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
 		fatalText.append(msg);
 		finalString = fatalText;
 		break;

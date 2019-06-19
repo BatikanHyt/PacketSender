@@ -378,3 +378,4 @@ compile_commands.json
 # QtCreator local machine specific files for imported projects
 *creator.user*
 /src/PacketSender/ReceivedMessages
+/.visuallint/CppCheck/PacketSender
