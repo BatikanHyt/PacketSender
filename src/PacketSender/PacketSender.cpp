@@ -53,7 +53,7 @@ PacketSender::PacketSender(QWidget *parent)
 
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(mPackWidget,0,0);
-	layout->addWidget(mConWidget,0,1);
+	layout->addWidget(mConWidget,0,1,Qt::AlignRight);
 	layout->addWidget(mLoggerWidget,1,0,1,0);
 
 	ui.centralWidget->setLayout(layout);

@@ -85,19 +85,19 @@ void ConnectionWidget::createUdpSocket(QString hostAddress, QString unicastAddre
 	mUdpHandler->initializeUdpSocket();
 }
 
-void ConnectionWidget::onWriteToTcpClient(QByteArray &data)
+void ConnectionWidget::onWriteToTcpClient(QByteArray &data,QString info)
 {
-	mTcpClientHandler->writeToSocket(data);
+	mTcpClientHandler->writeToSocket(data,info);
 }
 
-void ConnectionWidget::onWriteToTcpServer(QByteArray & data)
+void ConnectionWidget::onWriteToTcpServer(QByteArray & data,QString info)
 {
-	mTcpServerHandler->writeToClient(data);
+	mTcpServerHandler->writeToClient(data,info);
 }
 
 void ConnectionWidget::onClientDisconnected(QString protocol, QString info)
 {
-	emit clientDisconnectedEvent("TCP",info);
+	emit clientDisconnectedEvent(protocol,info);
 }
 
 void ConnectionWidget::on_rbUdp_clicked()

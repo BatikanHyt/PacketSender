@@ -31,7 +31,7 @@ public:
 
 	void setListenPort(int port);
 
-	void writeToClient(QByteArray& data);
+	void writeToClient(QByteArray& data,QString info);
 
 public slots:
 

@@ -19,15 +19,15 @@ public:
 
 signals:
 
-	void writeTcpSocket(QByteArray &data);
+	void writeTcpSocket(QByteArray &data,QString info);
 
-	void writeUdpSocket(QByteArray &data);
+	void writeUdpSocket(QByteArray &data,QString info);
 
 public slots:
 
 	void onConnectionEstablished(QString protocolName, QString information);
 
-	void onClientDisconnected(QString information);
+	void onClientDisconnected(QString protocolName, QString information);
 
 	void on_pbLoadFile_clicked();
 
@@ -58,6 +58,8 @@ private:
 	QHash<int, bool> mTransferFinished;
 
 	QHash<int, int> mFileProcess;
+
+	QHash<int, QString> mSendInfoHash;
 
 	int mDataPartSize;
 

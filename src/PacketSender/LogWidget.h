@@ -14,6 +14,10 @@ public:
 
 	void generateLogSignal(const QString& msg);
 
+	void setLogLevel(QString level);
+
+	void setLogTime(QString time);
+
 signals:
 
 	void emitLogEvent(QString mgg);
@@ -26,4 +30,8 @@ public slots:
 
 private:
 	Ui::LogWidget ui;
+
+	QString mLogLevel;
+
+	QString mLogTime;
 };

@@ -96,7 +96,10 @@ void TcpServerHandler::handleNewConnection()
 		qInfo() << tr("New client connected to the Tcp server on %1:%2.")
 			.arg(tcpSocket->localAddress().toString())
 			.arg(tcpSocket->localPort());
-		int port = tcpSocket->localPort();
+
+		qInfo() << tr("New client connected to the Tcp server on %1:%2 Peer Address.")
+			.arg(tcpSocket->peerAddress().toString())
+			.arg(tcpSocket->peerPort());
 
 	}
 }
@@ -121,49 +124,58 @@ void TcpServerHandler::handleReadyRead()
 			dataStream >> mesId;
 			dataStream >> len;
 
-			QByteArray content(len+3, Qt::Uninitialized);
-			if (mBuffer.size() < len + 3)
-			{
-				return;
-			}
-			content = mBuffer.mid(0, len + 3);
-
 			FileSenderMessageType messageType = (FileSenderMessageType)mesId;
-			PacketSenderHandler* handler = mHandlerHash.value(messageType);
-			if (handler != 0)
+			if(isValidMessageType(messageType))
 			{
-				handler->handle(content);
-				QString fileName = handler->getFileName();
-				QByteArray fileData = handler->getParsedData();
-				//qDebug() << "Received packet data size : " << fileData.size();
-				testCount += fileData.size();
-				if (messageType == eFileTransferData)
+				QByteArray content(len + 3, Qt::Uninitialized);
+				if (mBuffer.size() < len + 3)
 				{
-					totalPacket++;
-					if (mFileDataBuffer.contains(fileName))
+					return;
+				}
+				content = mBuffer.mid(0, len + 3);
+
+				PacketSenderHandler* handler = mHandlerHash.value(messageType);
+				if (handler != 0)
+				{
+					handler->handle(content);
+					QString fileName = handler->getFileName();
+					QByteArray fileData = handler->getParsedData();
+					//qDebug() << "Received packet data size : " << fileData.size();
+					testCount += fileData.size();
+					if (messageType == eFileTransferData)
 					{
-						mFileDataBuffer[fileName].append(fileData);
+						totalPacket++;
+						if (mFileDataBuffer.contains(fileName))
+						{
+							mFileDataBuffer[fileName].append(fileData);
+						}
+						else
+						{
+							mFileDataBuffer.insert(fileName, fileData);
+						}
 					}
-					else
+					else if (messageType == eFileTransferEnd)
 					{
-						mFileDataBuffer.insert(fileName, fileData);
+						qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(mFileDataBuffer[fileName].size());
+						qDebug() << "Number of packet recv: " << totalPacket;
+						saveToFile(fileName);
+						totalPacket = 0;
+						testCount = 0;
 					}
 				}
-				else if (messageType == eFileTransferEnd)
+				else
 				{
-					qDebug() << "Total bytes received for the " << fileName << " is " << QString::number(mFileDataBuffer[fileName].size());
-					qDebug() << "Number of packet recv: " << totalPacket;
-					saveToFile(fileName);
-					totalPacket = 0;
-					testCount = 0;
+					qDebug("Unexpected message id.");
 				}
+				dataStream.skipRawData(len);
+				mBuffer.remove(0, len + 3);
 			}
 			else
 			{
-				qDebug("Unexpected message id.");
+				qDebug()<<"Received Message : " << mBuffer;
+				mBuffer.remove(0, mBuffer.size());
+				dataStream.skipRawData(mBuffer.size());
 			}
-			dataStream.skipRawData(len);
-			mBuffer.remove(0, len + 3);
 		}
 	}
 }
@@ -205,7 +217,7 @@ void TcpServerHandler::setListenPort(int port)
 	mListenPort = port;
 }
 
-void TcpServerHandler::writeToClient(QByteArray & data)
+void TcpServerHandler::writeToClient(QByteArray & data,QString info)
 {
 	QTcpSocket* clientSocket = mSocketMap.begin().value();
 	

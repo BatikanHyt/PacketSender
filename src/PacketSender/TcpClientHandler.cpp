@@ -35,6 +35,8 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 		&TcpClientHandler::handleDisconnected);
 
 	tcpSocket->setProperty("socketId", mSocketId);
+	tcpSocket->setProperty("PeerHost", hostAddr);
+	tcpSocket->setProperty("PeerPort", port);
 	tcpSocket->connectToHost(hostAddr, port);
 
 	qInfo() << tr("Trying to connect remote server on %1:%2...")
@@ -46,8 +48,8 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	if (tcpSocket->state() == QAbstractSocket::ConnectedState)
 	{
 		qInfo() << tr("Connected to remote server on %1:%2.")
-			.arg(hostAddr)
-			.arg(port);
+			.arg(tcpSocket->peerAddress().toString())
+			.arg(tcpSocket->peerPort());
 		mSocketMap.insert(mSocketId, tcpSocket);
 		mSocketId++;
 		return true;
@@ -65,10 +67,27 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	return false;
 }
 
-void TcpClientHandler::writeToSocket(QByteArray &data)
+void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 {
-	//QString dataStr = data.constData();
-	QTcpSocket* tcpSocket = mSocketMap.begin().value();
+	//Parsing The Info
+	info.replace(":", " ");
+	QStringList infoList = info.split(" ");
+	QString hostAddress = infoList.at(0);
+	int portNumber = infoList.at(1).toInt();
+	QTcpSocket* tcpSocket;
+	QHashIterator<int, QTcpSocket*>itor(mSocketMap);
+	while (itor.hasNext())
+	{
+		itor.next();
+		QString address = itor.value()->property("PeerHost").toString();
+		int port = itor.value()->property("PeerPort").toInt();
+		if (portNumber == port && hostAddress.contains(address))
+		{
+			tcpSocket = itor.value();
+			break;
+		}
+	}
+
 	if (0 != tcpSocket)
 	{
 		int written = tcpSocket->write(data,data.size());
@@ -95,9 +114,15 @@ void TcpClientHandler::handleDisconnected()
 	{
 
 		int socketId = tcpSocket->property("socketId").toInt();
+		QString peerHostAddress = mSocketMap[socketId]->property("PeerHost").toString();
+		int peerHostPort = mSocketMap[socketId]->property("PeerPort").toInt();
+
 		qInfo() << QString("Disconnected to TCP server on %1:%2.")
-			.arg(mSocketMap[socketId]->localAddress().toString())
-			.arg(mSocketMap[socketId]->localPort());
+			.arg(peerHostAddress)
+			.arg(peerHostPort);
+
+		QString protocol = "TCP";
+		QString info = peerHostAddress + ":" + QString::number(peerHostPort);
 
 		qDebug() << tr("Deleting the socket with id %1").arg(socketId);
 
@@ -107,5 +132,7 @@ void TcpClientHandler::handleDisconnected()
 		
 		mSocketMap[socketId]->deleteLater();
 		mSocketMap.remove(socketId);
+		
+		emit clientSocketDisconnectedEvent(protocol, info);
 	}
 }

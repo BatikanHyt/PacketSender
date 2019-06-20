@@ -36,9 +36,9 @@ public slots:
 
 	void on_pbConnect_clicked();
 
-	void onWriteToTcpClient(QByteArray &data);
+	void onWriteToTcpClient(QByteArray &data,QString info);
 
-	void onWriteToTcpServer(QByteArray &data);
+	void onWriteToTcpServer(QByteArray &data,QString info);
 
 	void onClientDisconnected(QString protocol, QString info);
 

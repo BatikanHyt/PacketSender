@@ -30,7 +30,7 @@ public slots:
 
 	void handleDisconnected();
 
-	void writeToSocket(QByteArray &data);
+	void writeToSocket(QByteArray &data,QString info);
 
 private:
 

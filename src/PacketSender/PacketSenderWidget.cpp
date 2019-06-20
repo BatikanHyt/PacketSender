@@ -42,10 +42,10 @@ void PacketSenderWidget::onConnectionEstablished(QString protocol ,QString info)
 	initializeConnectionList();
 }
 
-void PacketSenderWidget::onClientDisconnected(QString info)
+void PacketSenderWidget::onClientDisconnected(QString protocol, QString info)
 {
-	int index = ui.cbConnectionList->findText(info);
-	ui.cbConnectionList->removeItem(index);
+	mConnectionList.remove(info);
+	initializeConnectionList();
 }
 
 void PacketSenderWidget::on_pbLoadFile_clicked()
@@ -70,6 +70,7 @@ void PacketSenderWidget::on_pbLoadFile_clicked()
 
 void PacketSenderWidget::on_pbStartTransfer_clicked()
 {
+	QString selectedConnectionInfo = ui.cbConnectionList->currentText();
 	if (ui.rbUseTcp->isChecked())
 	{
 		mUseTcp = true;
@@ -86,36 +87,40 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 		itemSelected = true;
 	}
 
-	while (*item)
+	if(!selectedConnectionInfo.isEmpty())
 	{
-		if ((*item)->checkState(0) == Qt::Checked)
+		while (*item)
 		{
-			QString fileName = (*item)->text(0);
-			qDebug() << "Selected file names : " << fileName;
-			itemSelected = true;
-			initializeFileData(fileName);
-			mDelay = ui.sbMessageDelay->value();
-			mDataPartSize = ui.cbMessageSize->currentText().toInt();
-			mDataPartSize -= fileName.size();
-			int id = startTimer(mDelay);
+			if ((*item)->checkState(0) == Qt::Checked)
+			{
+				QString fileName = (*item)->text(0);
+				qDebug() << "Selected file names : " << fileName;
+				itemSelected = true;
+				initializeFileData(fileName);
+				mDelay = ui.sbMessageDelay->value();
+				mDataPartSize = ui.cbMessageSize->currentText().toInt();
+				mDataPartSize -= fileName.size();
+				int id = startTimer(mDelay);
 
-			mFileHash.insert(id, fileName);		
-			mFileProcess.insert(id, 0);
-			mTransferFinished.insert(id, false);
+				mSendInfoHash.insert(id, selectedConnectionInfo);
+				mFileHash.insert(id, fileName);
+				mFileProcess.insert(id, 0);
+				mTransferFinished.insert(id, false);
+			}
+			++item;
 		}
-		++item;
-	}
-	if (!itemSelected)
-	{
-		QByteArray data = ui.leData->text().toUtf8();
-		QByteArray rawData = FileSender::sendRawData(data);
-		if (mUseTcp)
+		if (!itemSelected)
 		{
-			emit writeTcpSocket(rawData);
-		}
-		else
-		{
-			emit writeUdpSocket(rawData);
+			QByteArray data = ui.leData->text().toUtf8();
+			QByteArray rawData = FileSender::sendRawData(data);
+			if (mUseTcp)
+			{
+				emit writeTcpSocket(rawData, selectedConnectionInfo);
+			}
+			else
+			{
+				emit writeUdpSocket(rawData, selectedConnectionInfo);
+			}
 		}
 	}
 }
@@ -142,6 +147,7 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 	FileSender fileSender;
 	QString fileName = mFileHash[id];
 	QByteArray fileData = mFileDataHash[fileName];
+	QString info = mSendInfoHash[id];
 
 	int totalSize = fileData.size();
 	int bytesWritten = mFileProcess[id];
@@ -154,11 +160,11 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 		QByteArray endMessage = fileSender.sendEnd(fileName.toUtf8());
 		if (mUseTcp)
 		{
-			emit writeTcpSocket(endMessage);
+			emit writeTcpSocket(endMessage, info);
 		}
 		else
 		{
-			emit writeUdpSocket(endMessage);
+			emit writeUdpSocket(endMessage, info);
 		}
 	}
 	else
@@ -170,11 +176,11 @@ void PacketSenderWidget::timerEvent(QTimerEvent * event)
 			QByteArray splitedFileData = fileSender.sendData(fileName, arr);
 			if (mUseTcp)
 			{
-				emit writeTcpSocket(splitedFileData);
+				emit writeTcpSocket(splitedFileData, info);
 			}
 			else
 			{
-				emit writeUdpSocket(splitedFileData);
+				emit writeUdpSocket(splitedFileData, info);
 			}
 			mFileProcess[id] = bytesWritten;
 		}
