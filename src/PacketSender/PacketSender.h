@@ -5,6 +5,7 @@
 
 #include "PacketSenderWidget.h"
 #include "ConnectionWidget.h"
+#include "TrafficLoggerWidget.h"
 #include "LogWidget.h"
 #include <QtWidgets/QTextEdit>
 
@@ -19,6 +20,16 @@ public:
 
 	static LogWidget* getLogWidget();
 
+public slots:
+
+	void newServerCreated(QString info);
+
+	void serverCloseEvent();
+
+signals:
+
+	void shutdownServer(QString info);
+
 private:
 
 	Ui::PacketSenderClass ui;
@@ -29,4 +40,7 @@ private:
 
 	static LogWidget* mLoggerWidget;
 
+	QSet<QString> mServerList;
+
+	TrafficLoggerWidget* mTrafficLogger;
 };

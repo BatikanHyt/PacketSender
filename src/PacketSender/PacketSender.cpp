@@ -8,13 +8,15 @@ PacketSender::PacketSender(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-
+	ui.statusBar->setStyleSheet("background-color: rgb(76, 76, 76);");
 	mPackWidget = new PacketSenderWidget();
 	mConWidget = new ConnectionWidget();
+	mTrafficLogger = TrafficLoggerWidget::getLoggerWidget();
 	if (mLoggerWidget == 0)
 	{
 		mLoggerWidget = new LogWidget();
 	}
+
 
 	connect(mConWidget,
 		&ConnectionWidget::clientConnectedEvent,
@@ -41,6 +43,16 @@ PacketSender::PacketSender(QWidget *parent)
 		mPackWidget,
 		&PacketSenderWidget::onUdpSocketCreatedEvent);
 
+	connect(mConWidget,
+		&ConnectionWidget::serverCreatedEvent,
+		this,
+		&PacketSender::newServerCreated);
+
+	connect(this,
+		&PacketSender::shutdownServer,
+		mConWidget,
+		&ConnectionWidget::shutdownServerEvent);
+
 	/*connect(mPackWidget,
 		&PacketSenderWidget::writeTcpSocket,
 		mConWidget,
@@ -54,12 +66,34 @@ PacketSender::PacketSender(QWidget *parent)
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(mPackWidget,0,0);
 	layout->addWidget(mConWidget,0,1,Qt::AlignRight);
-	layout->addWidget(mLoggerWidget,1,0,1,0);
+	layout->addWidget(mTrafficLogger, 1, 0, 1, 0);
+	layout->addWidget(mLoggerWidget,2,0,2,0);
 
 	ui.centralWidget->setLayout(layout);
+	ui.centralWidget->setContentsMargins(0,0,0,0);
 }
 
 LogWidget* PacketSender::getLogWidget()
 {
 	return mLoggerWidget;
+}
+
+void PacketSender::serverCloseEvent()
+{
+	QPushButton* button = qobject_cast<QPushButton*>(sender());
+	QString info = button->text();
+	button->deleteLater();
+	emit shutdownServer(info);
+	
+}
+void PacketSender::newServerCreated(QString info)
+{
+	mServerList.insert(info);
+	QPushButton* button = new QPushButton(info);
+	button->setStyleSheet("background-color: rgb(255, 255, 255);");
+	connect(button, 
+		SIGNAL(clicked()), 
+		this, 
+		SLOT(serverCloseEvent()));
+	ui.statusBar->addWidget(button);
 }

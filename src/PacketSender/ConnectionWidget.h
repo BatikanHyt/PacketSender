@@ -32,6 +32,8 @@ signals:
 
 	void udpSocketCreatedEvent(QString protocol,QString info);
 
+	void serverCreatedEvent(QString info);
+
 public slots:
 
 	void on_pbConnect_clicked();
@@ -50,6 +52,12 @@ public slots:
 
 	void onUdpSocketCreate(QString info);
 
+	void onTcpServerCreated(QString info);
+
+	void shutdownServerEvent(QString info);
+
+	void onUdpSocketClosed(QString info);
+
 private:
 
 	Ui::ConnectionWidget ui;
@@ -59,4 +67,8 @@ private:
 	TcpServerHandler* mTcpServerHandler;
 
 	UdpHandler* mUdpHandler;
+
+	QHash<QString, TcpServerHandler*> mTcpServerHash;
+
+	QHash<QString, UdpHandler*> mUdpHash;
 };

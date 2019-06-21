@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TrafficLoggerWidget</class>
+ <widget class="QWidget" name="TrafficLoggerWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>821</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TrafficLoggerWidget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pbClearLog">
+       <property name="text">
+        <string>Clear Log</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cbLogTraffic">
+       <property name="text">
+        <string>Log Traffic</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>150</height>
+      </size>
+     </property>
+     <column>
+      <property name="text">
+       <string>Time</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Direction</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Method</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>From IP</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>From Port</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>To IP</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>To Port</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Data</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

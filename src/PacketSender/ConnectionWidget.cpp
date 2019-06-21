@@ -19,11 +19,6 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
 		this,
 		&ConnectionWidget::onClientDisconnected);
 
-	connect(mUdpHandler,
-		&UdpHandler::udpSocketCreated,
-		this,
-		&ConnectionWidget::onUdpSocketCreate);
-
 	ui.lHost->setVisible(false);
 	ui.leHost->setVisible(false);
 
@@ -75,14 +70,59 @@ void ConnectionWidget::createTcpServer(QString hostAddress, int portNumber)
 	mTcpServerHandler->setHostAddres(hostAddress);
 	mTcpServerHandler->setListenPort(portNumber);
 	mTcpServerHandler->createTcpServer();
+
+	connect(mTcpServerHandler,
+		&TcpServerHandler::tcpServerCreated,
+		this,
+		&ConnectionWidget::onTcpServerCreated);
+}
+
+void ConnectionWidget::onTcpServerCreated(QString info)
+{
+	QStringList splitter = info.split("(");
+	QString protocol = splitter.at(0);
+	QString serverInfo = splitter.at(1);
+	serverInfo.replace(")", "");
+	mTcpServerHash.insert(serverInfo, mTcpServerHandler);
+
+	emit serverCreatedEvent(info);
+}
+
+void ConnectionWidget::shutdownServerEvent(QString info)
+{
+	QStringList splitter = info.split("(");
+	QString protocol = splitter.at(0);
+	QString serverInfo = splitter.at(1);
+	serverInfo.replace(")", "");
+	if (protocol.contains("TCP"))
+	{
+		mTcpServerHash[serverInfo]->shutdownTcpServer(serverInfo);
+		mTcpServerHash.remove(serverInfo);
+	}
+	else if (protocol.contains("UDP"))
+	{
+		mUdpHash[serverInfo]->unboundUdpSocket();
+		mUdpHash.remove(serverInfo);
+	}
 }
 
 void ConnectionWidget::createUdpSocket(QString hostAddress, QString unicastAddress, int port)
 {
+	mUdpHandler = new UdpHandler();
 	mUdpHandler->setHostAddress(hostAddress);
 	mUdpHandler->setPort(port);
 	mUdpHandler->setUnicastAddress(unicastAddress);
 	mUdpHandler->initializeUdpSocket();
+
+	connect(mUdpHandler,
+		&UdpHandler::udpSocketCreated,
+		this,
+		&ConnectionWidget::onUdpSocketCreate);
+
+	connect(mUdpHandler,
+		&UdpHandler::udpSocketClosed,
+		this,
+		&ConnectionWidget::onUdpSocketClosed);
 }
 
 void ConnectionWidget::onWriteToTcpClient(QByteArray &data,QString info)
@@ -98,6 +138,11 @@ void ConnectionWidget::onWriteToTcpServer(QByteArray & data,QString info)
 void ConnectionWidget::onClientDisconnected(QString protocol, QString info)
 {
 	emit clientDisconnectedEvent(protocol,info);
+}
+
+void ConnectionWidget::onUdpSocketClosed(QString info)
+{
+	emit clientDisconnectedEvent("UDP", info);
 }
 
 void ConnectionWidget::on_rbUdp_clicked()
@@ -123,5 +168,12 @@ void ConnectionWidget::onWriteToUdpSocket(QByteArray & data)
 
 void ConnectionWidget::onUdpSocketCreate(QString info)
 {
-	emit udpSocketCreatedEvent("UDP",info);
+	QStringList splitter = info.split(":");
+	QString uniHostInfo = splitter.at(0) + ":" + splitter.at(1);
+	QString hostInfo = splitter.at(2) + ":" + splitter.at(1);
+	mUdpHash.insert(hostInfo, mUdpHandler);
+	QString serverInfo = "UDP(" + hostInfo+ ")";
+
+	emit serverCreatedEvent(serverInfo);
+	emit udpSocketCreatedEvent("UDP", uniHostInfo);
 }

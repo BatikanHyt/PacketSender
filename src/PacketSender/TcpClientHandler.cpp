@@ -39,10 +39,6 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 	tcpSocket->setProperty("PeerPort", port);
 	tcpSocket->connectToHost(hostAddr, port);
 
-	qInfo() << tr("Trying to connect remote server on %1:%2...")
-		.arg(hostAddr)
-		.arg(port);
-
 	tcpSocket->waitForConnected(500);
 
 	if (tcpSocket->state() == QAbstractSocket::ConnectedState)

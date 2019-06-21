@@ -6,6 +6,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
+#include <QtCore/QTime>
 
 #include "PacketSenderMessage.h"
 #include "FileDataMessage.h"
@@ -16,6 +17,7 @@
 #include "FileDataHandler.h"
 #include "FileEndHandler.h"
 #include "RawDataHandler.h"
+#include "TrafficLoggerWidget.h"
 
 TcpServerHandler::TcpServerHandler()
 	: mTcpServer(0)
@@ -55,6 +57,8 @@ void TcpServerHandler::createTcpServerInternal()
 		qInfo() << tr("Tcp server is listening on %1:%2")
 			.arg(mHostAddress)
 			.arg(mListenPort);
+		QString info = "TCP("+mHostAddress + ":" + QString::number(mListenPort)+")";
+		emit tcpServerCreated(info);
 	}
 	else
 	{
@@ -78,6 +82,21 @@ void TcpServerHandler::saveToFile(QString fileName)
 	mFileDataBuffer.remove(fileName);
 }
 
+void TcpServerHandler::shutdownTcpServerInternal(QString info)
+{
+	QStringList splitter = info.split(":");
+	QString hostAddress = splitter.at(0);
+	int port = splitter.at(1).toInt();
+	if (mHostAddress.contains(hostAddress) && mListenPort == port)
+	{
+		mTcpServer->close();
+		qInfo() << tr("Shutting down TCP server on %1:%2")
+			.arg(mHostAddress)
+			.arg(mListenPort);
+		mTcpServer->deleteLater();
+	}
+}
+
 void TcpServerHandler::handleNewConnection()
 {
 	if (mTcpServer->hasPendingConnections())
@@ -96,11 +115,6 @@ void TcpServerHandler::handleNewConnection()
 		qInfo() << tr("New client connected to the Tcp server on %1:%2.")
 			.arg(tcpSocket->localAddress().toString())
 			.arg(tcpSocket->localPort());
-
-		qInfo() << tr("New client connected to the Tcp server on %1:%2 Peer Address.")
-			.arg(tcpSocket->peerAddress().toString())
-			.arg(tcpSocket->peerPort());
-
 	}
 }
 
@@ -109,6 +123,25 @@ void TcpServerHandler::handleReadyRead()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
+		
+		QString hostIp = "You";
+		int port = tcpSocket->localPort();
+		QString peerHost = tcpSocket->peerAddress().toString();
+		int peerPort = tcpSocket->peerPort();
+		QString method = "TCP";
+		QString direction = "Rx";
+		QString currentTime = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+
+		/*TrafficLoggerWidget* trafficLoggerWidget = TrafficLoggerWidget::getLoggerWidget();
+		trafficLoggerWidget->setTime(currentTime);
+		trafficLoggerWidget->setDirection(direction);
+		trafficLoggerWidget->setMethod(method);
+		trafficLoggerWidget->setFromIp(peerHost);
+		trafficLoggerWidget->setFromPort(peerPort);
+		trafficLoggerWidget->setToIp(hostIp);
+		trafficLoggerWidget->setToPort(port);
+		trafficLoggerWidget->updateTrafficLogger();*/
+
 		quint32 socketId = tcpSocket->property("socketId").toUInt();
 		tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 		QByteArray readData = tcpSocket->readAll();
@@ -227,4 +260,11 @@ void TcpServerHandler::createTcpServer()
 {
 	QMetaObject::invokeMethod(this,
 		"createTcpServerInternal");
+}
+
+void TcpServerHandler::shutdownTcpServer(QString info)
+{
+	QMetaObject::invokeMethod(this, 
+		"shutdownTcpServerInternal", 
+		Q_ARG(QString, info));
 }

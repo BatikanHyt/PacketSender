@@ -13,18 +13,7 @@
   <property name="windowTitle">
    <string>PacketSender</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>70</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>

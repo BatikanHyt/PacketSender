@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "ui_LogWidget.h"
+#include <QtGui/QIcon>
 
 class LogWidget : public QWidget
 {
@@ -17,6 +18,8 @@ public:
 	void setLogLevel(QString level);
 
 	void setLogTime(QString time);
+
+	QIcon getLogIcon(QString logLevel);
 
 signals:
 

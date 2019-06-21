@@ -27,6 +27,8 @@ public:
 
 	void createTcpServer();
 
+	void shutdownTcpServer(QString info);
+
 	void setHostAddres(QString hostAddress);
 
 	void setListenPort(int port);
@@ -46,6 +48,12 @@ public slots:
 	void createTcpServerInternal();
 
 	void saveToFile(QString fileName);
+
+	void shutdownTcpServerInternal(QString info);
+
+signals:
+
+	void tcpServerCreated(QString info);
 
 private:
 

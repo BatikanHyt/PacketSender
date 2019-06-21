@@ -6,6 +6,7 @@
 #include "FileSenderMessageType.h"
 #include "FileDataHandler.h"
 #include "FileEndHandler.h"
+#include "RawDataHandler.h"
 
 #include <QtCore/QFile>
 #include <QtNetwork/QUdpSocket>
@@ -33,6 +34,7 @@ UdpHandler::UdpHandler()
 
 	mHandlerHash.insert(eFileTransferData, new FileDataHandler());
 	mHandlerHash.insert(eFileTransferEnd, new FileEndHandler());
+	mHandlerHash.insert(eRawDataTransfer, new RawDataHandler());
 }
 
 
@@ -61,6 +63,26 @@ void UdpHandler::initializeUdpSocket()
 		"createUdpSocketInternal");
 }
 
+void UdpHandler::unboundUdpSocket()
+{
+	QMetaObject::invokeMethod(this,
+		"unboundUdpSocketInternal");
+}
+
+void UdpHandler::unboundUdpSocketInternal()
+{
+	mUdpSocket->close();
+	qInfo() <<
+		QString("Udp socket unbound successfully on %1:%2")
+		.arg(mHostAddress)
+		.arg(mUdpPort);
+
+	QString info = mUnicastAddress + ":" + QString::number(mUdpPort);
+	emit udpSocketClosed(info);
+	mUdpSocket->deleteLater();
+	
+}
+
 void UdpHandler::timerEvent(QTimerEvent * timerEvent)
 {
 }
@@ -72,12 +94,14 @@ void UdpHandler::onError(QAbstractSocket::SocketError socketError)
 
 void UdpHandler::writeDataToUdpSocket(const QByteArray & data)
 {
-	if (QAbstractSocket::BoundState == mUdpSocket->state())
+	if (mUdpSocket != 0)
 	{
-		qint64 written = mUdpSocket->writeDatagram(
-			data,
-			QHostAddress(mUnicastAddress),
-			mUdpPort);
+		if (QAbstractSocket::BoundState == mUdpSocket->state())
+		{
+			mUdpSocket->writeDatagram(data,
+				QHostAddress(mUnicastAddress),
+				mUdpPort);
+		}
 	}
 }
 
@@ -90,7 +114,7 @@ void UdpHandler::createUdpSocketInternal()
 			QString("Udp socket bound successfully on %1:%2")
 			.arg(mHostAddress)
 			.arg(mUdpPort);
-		QString info = mUnicastAddress + ":" + QString::number(mUdpPort);
+		QString info = mUnicastAddress + ":" + QString::number(mUdpPort) +":"+mHostAddress;
 		emit udpSocketCreated(info);
 	}
 	else
@@ -142,7 +166,7 @@ void UdpHandler::onReadyRead()
 			}
 			else
 			{
-				qDebug("Unexpected");
+				qDebug() << "Received Data : " << readData;
 			}
 
 		}

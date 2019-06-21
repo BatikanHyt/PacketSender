@@ -130,6 +130,7 @@
     <ClCompile Include="RawDataMessage.cpp" />
     <ClCompile Include="TcpClientHandler.cpp" />
     <ClCompile Include="TcpServerHandler.cpp" />
+    <ClCompile Include="TrafficLoggerWidget.cpp" />
     <ClCompile Include="UdpHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,7 @@
     <QtUic Include="LogWidget.ui" />
     <QtUic Include="PacketSender.ui" />
     <QtUic Include="PacketSenderWidget.ui" />
+    <QtUic Include="TrafficLoggerWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="PacketSender.qrc" />
@@ -187,6 +189,10 @@
     <ClInclude Include="FileStartMessage.h" />
     <ClInclude Include="RawDataHandler.h" />
     <ClInclude Include="RawDataMessage.h" />
+    <QtMoc Include="TrafficLoggerWidget.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <QtMoc Include="UdpHandler.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>

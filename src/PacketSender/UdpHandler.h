@@ -29,9 +29,17 @@ public:
 
 	void initializeUdpSocket();
 
+	void unboundUdpSocket();
+
+public slots:
+
+	void unboundUdpSocketInternal();
+
 signals:
 
 	void udpSocketCreated(QString info);
+
+	void udpSocketClosed(QString info);
 
 protected:
 

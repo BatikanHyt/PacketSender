@@ -90,6 +90,9 @@
     <ClCompile Include="RawDataHandler.cpp">
       <Filter>Handlers</Filter>
     </ClCompile>
+    <ClCompile Include="TrafficLoggerWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h">
@@ -113,6 +116,9 @@
     <QtMoc Include="UdpHandler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="TrafficLoggerWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PacketSender.ui">
@@ -125,6 +131,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="LogWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TrafficLoggerWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

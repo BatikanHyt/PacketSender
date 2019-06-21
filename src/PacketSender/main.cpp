@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 	PacketSender w;
-	qDebug() << "Program Started";
+
 	w.show();
 	return a.exec();
 }
