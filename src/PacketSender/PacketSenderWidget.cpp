@@ -6,12 +6,16 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 #include <QtCore/QHashIterator>
+#include <QRegExpValidator>
 
 PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	: QWidget(parent)
 	, mUseTcp(false)
 {
 	ui.setupUi(this);
+	QRegExp rx("[a-fA-F0-9]*");
+	QRegExpValidator *v = new QRegExpValidator(rx,this);
+	ui.leHex->setValidator(v);
 }
 
 PacketSenderWidget::~PacketSenderWidget()
@@ -139,6 +143,71 @@ void PacketSenderWidget::onUdpSocketCreatedEvent(QString protocolName, QString i
 {
 	mConnectionList.insert(information, protocolName);
 	initializeConnectionList();
+}
+
+void PacketSenderWidget::toHexFormat(QString &hex)
+{
+	for (int i = 2 ; i <hex.size(); i += 3)
+	{
+		hex.insert(i, " ");
+	}
+}
+
+
+void PacketSenderWidget::on_leData_editingFinished()
+{
+	QString text = ui.leData->text();
+	QByteArray arr = text.toUtf8().toHex().toUpper();
+	QString hex = arr;
+	toHexFormat(hex);
+	ui.leHex->setText(hex);
+}
+
+void PacketSenderWidget::on_leHex_editingFinished()
+{
+	QString text = ui.leHex->text();
+	QString hexFormatted;
+	QString normalizedText = "";
+	for (int i = text.size()-1; i >=0; i -=2)
+	{
+		int prev = i - 1;
+		QString str = text.mid(prev, 2);
+		int number = str.toInt(nullptr,16);
+		if ((number < 32 && number >= 0) || number >126)
+		{
+			qDebug() << "Number: " << number;
+			if (number < 10)
+			{
+				hexFormatted.push_front(str);
+				if (str.size() == 1)
+				hexFormatted.push_front("0");
+				if (i >= 2)
+				hexFormatted.push_front(" ");
+				str = "\\0" + QString::number(number);
+				normalizedText.push_front(str);
+			}
+			else
+			{
+				hexFormatted.push_front(str);
+				if (i >= 2)
+				hexFormatted.push_front(" ");
+				str.push_front("\\");
+				normalizedText.push_front(str);
+			}
+		}
+		else
+		{
+			hexFormatted.push_front(str);
+			if (i >= 2)
+			{
+				hexFormatted.push_front(" ");
+			}
+			QByteArray arr = str.toUtf8();
+			normalizedText.push_front(QByteArray::fromHex(arr));
+		}
+	}
+	ui.leHex->setText(hexFormatted);
+	ui.leData->setText(normalizedText);
 }
 
 void PacketSenderWidget::timerEvent(QTimerEvent * event)

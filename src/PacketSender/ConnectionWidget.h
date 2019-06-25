@@ -22,7 +22,7 @@ public:
 
 	void createTcpServer(QString hostAddress, int port);
 
-	void createUdpSocket(QString hostAddress, QString unicastAddress ,int port);
+	void createUdpSocket(QString hostAddress, QString unicastAddress , int bindPort ,int port);
 
 signals:
 
@@ -48,7 +48,7 @@ public slots:
 
 	void on_rbTcp_clicked();
 
-	void onWriteToUdpSocket(QByteArray& data);
+	void onWriteToUdpSocket(QByteArray& data,QString info);
 
 	void onUdpSocketCreate(QString info);
 
@@ -71,4 +71,6 @@ private:
 	QHash<QString, TcpServerHandler*> mTcpServerHash;
 
 	QHash<QString, UdpHandler*> mUdpHash;
+
+	QHash<QString, QString> mUdpConnectionHash;
 };

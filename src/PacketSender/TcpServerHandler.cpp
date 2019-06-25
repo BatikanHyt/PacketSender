@@ -123,25 +123,6 @@ void TcpServerHandler::handleReadyRead()
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{
-		
-		QString hostIp = "You";
-		int port = tcpSocket->localPort();
-		QString peerHost = tcpSocket->peerAddress().toString();
-		int peerPort = tcpSocket->peerPort();
-		QString method = "TCP";
-		QString direction = "Rx";
-		QString currentTime = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
-
-		/*TrafficLoggerWidget* trafficLoggerWidget = TrafficLoggerWidget::getLoggerWidget();
-		trafficLoggerWidget->setTime(currentTime);
-		trafficLoggerWidget->setDirection(direction);
-		trafficLoggerWidget->setMethod(method);
-		trafficLoggerWidget->setFromIp(peerHost);
-		trafficLoggerWidget->setFromPort(peerPort);
-		trafficLoggerWidget->setToIp(hostIp);
-		trafficLoggerWidget->setToPort(port);
-		trafficLoggerWidget->updateTrafficLogger();*/
-
 		quint32 socketId = tcpSocket->property("socketId").toUInt();
 		tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 		QByteArray readData = tcpSocket->readAll();
@@ -156,6 +137,15 @@ void TcpServerHandler::handleReadyRead()
 
 			dataStream >> mesId;
 			dataStream >> len;
+			//Logging
+			TrafficLogsItems logItems;
+			logItems.toIp = "You";
+			logItems.toPort = tcpSocket->localPort();
+			logItems.fromIp = tcpSocket->peerAddress().toString();
+			logItems.fromPort = tcpSocket->peerPort();
+			logItems.method = "TCP";
+			logItems.direction = "Rx";
+			logItems.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
 
 			FileSenderMessageType messageType = (FileSenderMessageType)mesId;
 			if(isValidMessageType(messageType))
@@ -173,7 +163,6 @@ void TcpServerHandler::handleReadyRead()
 					handler->handle(content);
 					QString fileName = handler->getFileName();
 					QByteArray fileData = handler->getParsedData();
-					//qDebug() << "Received packet data size : " << fileData.size();
 					testCount += fileData.size();
 					if (messageType == eFileTransferData)
 					{
@@ -205,10 +194,10 @@ void TcpServerHandler::handleReadyRead()
 			}
 			else
 			{
-				qDebug()<<"Received Message : " << mBuffer;
 				mBuffer.remove(0, mBuffer.size());
 				dataStream.skipRawData(mBuffer.size());
 			}
+			TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(logItems);
 		}
 	}
 }

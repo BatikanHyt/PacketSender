@@ -26,6 +26,16 @@ public slots:
 
 	void serverCloseEvent();
 
+	void on_actionFusion_triggered();
+
+	void on_actionClassic_triggered();
+
+	void on_actionVintage_triggered();
+
+	void on_actionWhite_triggered();
+
+	void on_actionDark_triggered();
+
 signals:
 
 	void shutdownServer(QString info);

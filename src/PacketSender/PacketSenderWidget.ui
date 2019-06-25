@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>833</width>
-    <height>384</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
            <bool>true</bool>
           </property>
           <property name="currentText">
-           <string>4096</string>
+           <string>1000</string>
           </property>
           <item>
            <property name="text">
@@ -170,6 +170,36 @@
          <widget class="QPushButton" name="pbLoadFile">
           <property name="text">
            <string>Load Path</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLabel" name="lHex">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>HEX:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leHex">
+          <property name="inputMask">
+           <string/>
           </property>
          </widget>
         </item>

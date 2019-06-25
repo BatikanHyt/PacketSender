@@ -23,8 +23,59 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuStyles">
+    <property name="title">
+     <string>Styles</string>
+    </property>
+    <addaction name="actionFusion"/>
+    <addaction name="actionClassic"/>
+    <addaction name="actionVintage"/>
+   </widget>
+   <widget class="QMenu" name="menuTheme">
+    <property name="title">
+     <string>Theme</string>
+    </property>
+    <addaction name="actionWhite"/>
+    <addaction name="actionDark"/>
+   </widget>
+   <addaction name="menuStyles"/>
+   <addaction name="menuTheme"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionFusion">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Fusion</string>
+   </property>
+  </action>
+  <action name="actionClassic">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Classic</string>
+   </property>
+  </action>
+  <action name="actionVintage">
+   <property name="text">
+    <string>Vintage</string>
+   </property>
+  </action>
+  <action name="actionWhite">
+   <property name="text">
+    <string>White</string>
+   </property>
+  </action>
+  <action name="actionDark">
+   <property name="text">
+    <string>Dark</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

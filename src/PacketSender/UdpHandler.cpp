@@ -7,8 +7,10 @@
 #include "FileDataHandler.h"
 #include "FileEndHandler.h"
 #include "RawDataHandler.h"
+#include "TrafficLoggerWidget.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QTime>
 #include <QtNetwork/QUdpSocket>
 
 UdpHandler::UdpHandler()
@@ -18,6 +20,8 @@ UdpHandler::UdpHandler()
 {
 	mThread = new QThread(this);
 	mUdpSocket = new QUdpSocket(this);
+
+	qRegisterMetaType<QAbstractSocket::SocketError>("SocketError");
 
 	connect(mUdpSocket,
 		&QUdpSocket::readyRead,
@@ -57,6 +61,11 @@ void UdpHandler::setUnicastAddress(const QString & hostAddress)
 	mUnicastAddress = hostAddress;
 }
 
+void UdpHandler::setBindPort(quint16 port)
+{
+	mBindPort = port;
+}
+
 void UdpHandler::initializeUdpSocket()
 {
 	QMetaObject::invokeMethod(this,
@@ -75,9 +84,9 @@ void UdpHandler::unboundUdpSocketInternal()
 	qInfo() <<
 		QString("Udp socket unbound successfully on %1:%2")
 		.arg(mHostAddress)
-		.arg(mUdpPort);
+		.arg(mBindPort);
 
-	QString info = mUnicastAddress + ":" + QString::number(mUdpPort);
+	QString info = mUnicastAddress + ":" + QString::number(mBindPort);
 	emit udpSocketClosed(info);
 	mUdpSocket->deleteLater();
 	
@@ -101,20 +110,31 @@ void UdpHandler::writeDataToUdpSocket(const QByteArray & data)
 			mUdpSocket->writeDatagram(data,
 				QHostAddress(mUnicastAddress),
 				mUdpPort);
+			//Logging
+			TrafficLogsItems items;
+			items.toIp = mUnicastAddress;
+			items.toPort = mUdpPort;
+			items.fromIp = mUdpSocket->localAddress().toString();
+			items.fromPort = mUdpSocket->localPort();
+			items.direction = "Tx";
+			items.method = "UDP";
+			items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+
+			TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
 		}
 	}
 }
 
 void UdpHandler::createUdpSocketInternal()
 {
-	bool bound = mUdpSocket->bind(QHostAddress(mHostAddress), mUdpPort);
+	bool bound = mUdpSocket->bind(QHostAddress(mHostAddress), mBindPort);
 	if (bound)
 	{
 		qInfo() <<
 			QString("Udp socket bound successfully on %1:%2")
 			.arg(mHostAddress)
-			.arg(mUdpPort);
-		QString info = mUnicastAddress + ":" + QString::number(mUdpPort) +":"+mHostAddress;
+			.arg(mBindPort);
+		QString info = mUnicastAddress + ":" + QString::number(mUdpPort) +":"+mHostAddress + ":" + QString::number(mBindPort);
 		emit udpSocketCreated(info);
 	}
 	else
@@ -134,8 +154,10 @@ void UdpHandler::onReadyRead()
 		qint32 size = mUdpSocket->pendingDatagramSize();
 		if (size > 0)
 		{
+			QHostAddress sender;
+			quint16 senderPort;
 			QByteArray readData(size, Qt::Uninitialized);
-			mUdpSocket->readDatagram(readData.data(), size);
+			mUdpSocket->readDatagram(readData.data(), size, &sender, &senderPort);
 			
 			PacketSenderMessage message;
 			message.parseData(readData);
@@ -164,11 +186,16 @@ void UdpHandler::onReadyRead()
 					saveToFile(fileName);
 				}
 			}
-			else
-			{
-				qDebug() << "Received Data : " << readData;
-			}
+			TrafficLogsItems items;
+			items.toIp = mUdpSocket->localAddress().toString();
+			items.toPort = mUdpSocket->localPort();
+			items.fromIp = sender.toString();
+			items.fromPort = senderPort;
+			items.direction = "Rx";
+			items.method = "UDP";
+			items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
 
+			TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
 		}
 	}
 }

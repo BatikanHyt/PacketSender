@@ -38,8 +38,14 @@
      </item>
      <item>
       <widget class="QCheckBox" name="cbLogTraffic">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Log Traffic</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

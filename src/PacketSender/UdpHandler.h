@@ -14,7 +14,6 @@ class UdpHandler
 	: public QObject
 {
 	Q_OBJECT
-
 public:
 
 	UdpHandler();
@@ -26,6 +25,8 @@ public:
 	void setPort(quint16 port);
 
 	void setUnicastAddress(const QString& hostAddress);
+
+	void setBindPort(quint16 port);
 
 	void initializeUdpSocket();
 
@@ -64,6 +65,8 @@ private:
 	QString mUnicastAddress;
 
 	quint16 mUdpPort;
+
+	quint16 mBindPort;
 
 	QUdpSocket* mUdpSocket;
 

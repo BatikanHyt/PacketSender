@@ -4,11 +4,12 @@
 #include <QtNetwork/QHostAddress>
 
 #include <QtCore/QThread>
+#include <QtCore/QTime>
+#include "TrafficLoggerWidget.h"
 
 
 TcpClientHandler::TcpClientHandler()
 	: mSocketId(0)
-	, sendCount(0)
 {
 	mThread = new QThread(this);
 	moveToThread(mThread);
@@ -93,7 +94,17 @@ void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 		}
 		tcpSocket->flush();
 		tcpSocket->waitForBytesWritten(3000);
-		sendCount++;
+		//Logging
+		TrafficLogsItems items;
+		items.toIp = tcpSocket->peerAddress().toString();
+		items.toPort = tcpSocket->peerPort();
+		items.direction = "Tx";
+		items.method = "TCP";
+		items.fromIp = "You";
+		items.fromPort = tcpSocket->peerPort();
+		items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+
+		TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
 	}
 }
 

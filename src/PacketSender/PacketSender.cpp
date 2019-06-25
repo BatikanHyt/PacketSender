@@ -1,6 +1,7 @@
 #include "PacketSender.h"
-
+#include "QStyleFactory"
 #include <QDebug>
+#include <QtCore/QFile>
 
 LogWidget* PacketSender::mLoggerWidget;
 
@@ -86,6 +87,35 @@ void PacketSender::serverCloseEvent()
 	emit shutdownServer(info);
 	
 }
+
+void PacketSender::on_actionFusion_triggered()
+{
+	QApplication::setStyle(QStyleFactory::create("Fusion"));
+}
+
+void PacketSender::on_actionClassic_triggered()
+{
+	QApplication::setStyle("WindowsVista");
+}
+
+void PacketSender::on_actionVintage_triggered()
+{
+	QApplication::setStyle("windows");
+}
+
+void PacketSender::on_actionWhite_triggered()
+{
+	setStyleSheet("");
+}
+
+void PacketSender::on_actionDark_triggered()
+{
+	QFile file("StyleSheet/darkorange.stylesheet");
+	file.open(QFile::ReadOnly);
+	QString styleSheet = QLatin1String(file.readAll());
+	setStyleSheet(styleSheet);
+}
+
 void PacketSender::newServerCreated(QString info)
 {
 	mServerList.insert(info);

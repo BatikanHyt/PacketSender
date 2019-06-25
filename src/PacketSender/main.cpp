@@ -3,6 +3,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMutex>
 #include <QtCore/QDateTime>
+#include <QtCore/QFile>
 static QMutex staticMutex;
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context ,const QString &msg)
@@ -62,7 +63,6 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 	PacketSender w;
-
 	w.show();
 	return a.exec();
 }

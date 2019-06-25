@@ -5,6 +5,19 @@
 
 #include <QtCore/QThread>
 
+struct TrafficLogsItems
+{
+	QString toIp;
+	QString fromIp;
+	int toPort;
+	int fromPort;
+	QString time;
+	QString method;
+	QString direction;
+};
+
+Q_DECLARE_METATYPE(TrafficLogsItems);
+
 class TrafficLoggerWidget : public QWidget
 {
 	Q_OBJECT
@@ -15,25 +28,14 @@ public:
 
 	static TrafficLoggerWidget* getLoggerWidget();
 
-	void setToIp(QString ip);
-
-	void setFromIp(QString ip);
-
-	void setTime(QString time);
-
-	void setToPort(int port);
-
-	void setFromPort(int port);
-
-	void setDirection(QString direction);
-
-	void setMethod(QString method);
-
-	void updateTrafficLogger();
+	void updateTrafficLogger(TrafficLogsItems items);
 
 public slots:
 
-	void updateTrafficLoggerInternal();
+	void updateTrafficLoggerInternal(TrafficLogsItems items);
+
+	void on_pbClearLog_clicked();
+
 private:
 	
 	TrafficLoggerWidget(QWidget *parent = Q_NULLPTR);
@@ -44,17 +46,5 @@ private:
 
 	static TrafficLoggerWidget* mTraficLoggerWidget;
 
-	QString mToIp;
-
-	QString mFromIp;
-
-	QString mMethod;
-
-	QString mDirection;
-
-	QString mTime;
-
-	int mFromPort;
-
-	int mToPort;
+	int mMaxItemCount;
 };

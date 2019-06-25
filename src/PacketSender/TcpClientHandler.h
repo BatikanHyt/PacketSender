@@ -39,7 +39,5 @@ private:
 	int mSocketId;
 
 	QHash<int, QTcpSocket*> mSocketMap;
-
-	int sendCount;
 };
 

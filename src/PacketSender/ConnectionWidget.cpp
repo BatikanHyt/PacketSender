@@ -13,7 +13,6 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 	mTcpClientHandler = new TcpClientHandler();
-	mUdpHandler = new UdpHandler();
 	connect(mTcpClientHandler,
 		&TcpClientHandler::clientSocketDisconnectedEvent,
 		this,
@@ -21,6 +20,8 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
 
 	ui.lHost->setVisible(false);
 	ui.leHost->setVisible(false);
+	ui.lBind->setVisible(false);
+	ui.leBind->setVisible(false);
 
 	QDir dir;
 	dir.mkpath("ReceivedMessages");
@@ -34,6 +35,7 @@ void ConnectionWidget::on_pbConnect_clicked()
 {
 	int portNumber = ui.lePort->text().toInt();
 	QString serverIp = ui.leIP->text();
+	int bindPort = ui.leBind->text().toInt();
 	QString hostAddress = ui.leHost->text();
 	if (ui.rbTcp->isChecked())
 	{
@@ -49,7 +51,7 @@ void ConnectionWidget::on_pbConnect_clicked()
 	}
 	else if (ui.rbUdp->isChecked())
 	{
-		createUdpSocket(hostAddress,serverIp,portNumber);
+		createUdpSocket(hostAddress,serverIp,bindPort,portNumber);
 	}
 }
 
@@ -103,15 +105,17 @@ void ConnectionWidget::shutdownServerEvent(QString info)
 	{
 		mUdpHash[serverInfo]->unboundUdpSocket();
 		mUdpHash.remove(serverInfo);
+		mUdpHash.remove(mUdpConnectionHash.key(serverInfo));
 	}
 }
 
-void ConnectionWidget::createUdpSocket(QString hostAddress, QString unicastAddress, int port)
+void ConnectionWidget::createUdpSocket(QString hostAddress, QString unicastAddress, int bindPort ,int port)
 {
 	mUdpHandler = new UdpHandler();
 	mUdpHandler->setHostAddress(hostAddress);
 	mUdpHandler->setPort(port);
 	mUdpHandler->setUnicastAddress(unicastAddress);
+	mUdpHandler->setBindPort(bindPort);
 	mUdpHandler->initializeUdpSocket();
 
 	connect(mUdpHandler,
@@ -148,9 +152,12 @@ void ConnectionWidget::onUdpSocketClosed(QString info)
 void ConnectionWidget::on_rbUdp_clicked()
 {
 	ui.label_2->setText("UnicastAddress:");
+	ui.label->setText("Unicast Port:");
 	ui.leHost->setVisible(true);
 	ui.lHost->setVisible(true);
 	ui.cbMode->setDisabled(true);
+	ui.lBind->setVisible(true);
+	ui.leBind->setVisible(true);
 }
 
 void ConnectionWidget::on_rbTcp_clicked()
@@ -159,19 +166,23 @@ void ConnectionWidget::on_rbTcp_clicked()
 	ui.leHost->setVisible(false);
 	ui.lHost->setVisible(false);
 	ui.cbMode->setDisabled(false);
+	ui.lBind->setVisible(false);
+	ui.leBind->setVisible(false);
 }
 
-void ConnectionWidget::onWriteToUdpSocket(QByteArray & data)
+void ConnectionWidget::onWriteToUdpSocket(QByteArray & data,QString info)
 {
-	mUdpHandler->writeDataToUdpSocket(data);
+	QString UnicastInfo = mUdpConnectionHash[info];
+	mUdpHash[UnicastInfo]->writeDataToUdpSocket(data);
 }
 
 void ConnectionWidget::onUdpSocketCreate(QString info)
 {
 	QStringList splitter = info.split(":");
 	QString uniHostInfo = splitter.at(0) + ":" + splitter.at(1);
-	QString hostInfo = splitter.at(2) + ":" + splitter.at(1);
+	QString hostInfo = splitter.at(2) + ":" + splitter.at(3);
 	mUdpHash.insert(hostInfo, mUdpHandler);
+	mUdpConnectionHash.insert(uniHostInfo, hostInfo);
 	QString serverInfo = "UDP(" + hostInfo+ ")";
 
 	emit serverCreatedEvent(serverInfo);

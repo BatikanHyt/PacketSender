@@ -17,6 +17,8 @@ public:
 
 	void initializeFileData(QString fileName);
 
+	void toHexFormat(QString &hex);
+
 signals:
 
 	void writeTcpSocket(QByteArray &data,QString info);
@@ -38,6 +40,10 @@ public slots:
 	void on_rbUseUdp_clicked();
 
 	void onUdpSocketCreatedEvent(QString protocolName, QString informarion);
+
+	void on_leData_editingFinished();
+
+	void on_leHex_editingFinished();
 
 protected:
 

@@ -6,6 +6,7 @@ LogWidget::LogWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 	ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
+	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 LogWidget::~LogWidget()
@@ -53,6 +54,7 @@ QIcon LogWidget::getLogIcon(QString logLevel)
 
 void LogWidget::on_pbClearLog_clicked()
 {
+	ui.tableWidget->clearContents();
 	ui.tableWidget->setRowCount(0);
 }
 
@@ -69,11 +71,12 @@ void LogWidget::logInternal(QString msg)
 	ui.tableWidget->setItem(0, 1, logLevelItem);
 	ui.tableWidget->setItem(0, 2, logMessage);
 
-	ui.tableWidget->setVisible(false);
-	ui.tableWidget->resizeColumnsToContents();
-	ui.tableWidget->resizeRowsToContents();
-	ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
-	ui.tableWidget->setVisible(true);
+	if (1 == ui.tableWidget->rowCount())
+	{
+		ui.tableWidget->resizeColumnsToContents();
+		//ui.tableWidget->resizeRowsToContents();
+		ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
+	}
 
 }
 
