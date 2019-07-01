@@ -18,6 +18,7 @@
 #include "FileEndHandler.h"
 #include "RawDataHandler.h"
 #include "TrafficLoggerWidget.h"
+#include "ClientListWidget.h"
 
 TcpServerHandler::TcpServerHandler()
 	: mTcpServer(0)
@@ -29,11 +30,24 @@ TcpServerHandler::TcpServerHandler()
 
 	mThread = new QThread(this);
 	mTcpServer = new QTcpServer(this);
+	mClientWidget = ClientListWidget::getClientListWidget();
+
+	//qRegisterMetaType<QByteArray>("QByteArray");
 
 	connect(mTcpServer,
 		&QTcpServer::newConnection,
 		this,
 		&TcpServerHandler::handleNewConnection);
+
+	connect(mClientWidget,
+		&ClientListWidget::disconnectClient,
+		this,
+		&TcpServerHandler::disconnectClient);
+
+	connect(mClientWidget,
+		&ClientListWidget::messageFinishedEvent,
+		this,
+		&TcpServerHandler::writeToClient);
 
 	moveToThread(mThread);
 	mThread->start();
@@ -106,7 +120,6 @@ void TcpServerHandler::handleNewConnection()
 		tcpSocket->setProperty("socketId", mSocketId);
 		tcpSocket->setSocketOption(QAbstractSocket::ReceiveBufferSizeSocketOption, 64 * 1024 * 1024);
 		mSocketMap.insert(mSocketId, tcpSocket);
-		mSocketId++;
 
 		connect(tcpSocket, &QTcpSocket::readyRead, this, &TcpServerHandler::handleReadyRead);
 		connect(tcpSocket, &QTcpSocket::disconnected, this, &TcpServerHandler::handleDisconnected);
@@ -115,6 +128,17 @@ void TcpServerHandler::handleNewConnection()
 		qInfo() << tr("New client connected to the Tcp server on %1:%2.")
 			.arg(tcpSocket->localAddress().toString())
 			.arg(tcpSocket->localPort());
+
+		ClientInfo info;
+		info.hostIp = tcpSocket->localAddress().toString();
+		info.clientIp = info.hostIp;
+		info.hostPort = tcpSocket->localPort();
+		info.clientPort = tcpSocket->peerPort();
+		info.socketId = mSocketId;
+
+		mClientWidget->updateClientList(info);
+
+		mSocketId++;
 	}
 }
 
@@ -239,10 +263,27 @@ void TcpServerHandler::setListenPort(int port)
 	mListenPort = port;
 }
 
-void TcpServerHandler::writeToClient(QByteArray & data,QString info)
+void TcpServerHandler::writeToClient(QByteArray data,int socketId)
 {
-	QTcpSocket* clientSocket = mSocketMap.begin().value();
-	
+	QTcpSocket* clientSocket = mSocketMap[socketId];
+	if (clientSocket != 0)
+	{
+		clientSocket->write(data, data.size());
+		clientSocket->flush();
+		clientSocket->waitForBytesWritten(500);
+		
+		//Logging
+		TrafficLogsItems items;
+		items.toIp = clientSocket->peerAddress().toString();
+		items.toPort = clientSocket->peerPort();
+		items.direction = "Tx";
+		items.method = "TCP";
+		items.fromIp = "You";
+		items.fromPort = clientSocket->localPort();
+		items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+
+		TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
+	}
 }
 
 void TcpServerHandler::createTcpServer()
@@ -256,4 +297,15 @@ void TcpServerHandler::shutdownTcpServer(QString info)
 	QMetaObject::invokeMethod(this, 
 		"shutdownTcpServerInternal", 
 		Q_ARG(QString, info));
+}
+
+void TcpServerHandler::disconnectClient(int socketId)
+{
+	QTcpSocket* clientSocket = mSocketMap[socketId];
+	if (clientSocket != 0)
+	{
+		mSocketMap.remove(socketId);
+		clientSocket->deleteLater();
+		qDebug() << "Socket closed";
+	}
 }

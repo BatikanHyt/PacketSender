@@ -12,6 +12,7 @@ class QTcpSocket;
 class QTcpServer;
 class QAbstractSocket;
 class PacketSenderHandler;
+class ClientListWidget;
 
 class TcpServerHandler
 	:public QObject
@@ -33,8 +34,6 @@ public:
 
 	void setListenPort(int port);
 
-	void writeToClient(QByteArray& data,QString info);
-
 public slots:
 
 	void handleNewConnection();
@@ -50,6 +49,10 @@ public slots:
 	void saveToFile(QString fileName);
 
 	void shutdownTcpServerInternal(QString info);
+
+	void disconnectClient(int sockedId);
+
+	void writeToClient(QByteArray data, int socketId);
 
 signals:
 
@@ -82,6 +85,8 @@ private:
 	QByteArray mBuffer;
 
 	QMutex mMutex;
+
+	ClientListWidget* mClientWidget;
 };
 
 

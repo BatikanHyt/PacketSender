@@ -34,6 +34,9 @@
     <Filter Include="Handlers">
       <UniqueIdentifier>{9be30345-3a19-47d0-8394-c2bf369a2fd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="QHexEdit">
+      <UniqueIdentifier>{c5645355-2459-4209-bef9-e85420c93519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -93,6 +96,21 @@
     <ClCompile Include="TrafficLoggerWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ClientListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QHexEdit\chunks.cpp">
+      <Filter>QHexEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="QHexEdit\commands.cpp">
+      <Filter>QHexEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="QHexEdit\qhexedit.cpp">
+      <Filter>QHexEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpWriterDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h">
@@ -119,6 +137,21 @@
     <QtMoc Include="TrafficLoggerWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ClientListWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QHexEdit\chunks.h">
+      <Filter>QHexEdit</Filter>
+    </QtMoc>
+    <QtMoc Include="QHexEdit\commands.h">
+      <Filter>QHexEdit</Filter>
+    </QtMoc>
+    <QtMoc Include="QHexEdit\qhexedit.h">
+      <Filter>QHexEdit</Filter>
+    </QtMoc>
+    <QtMoc Include="TcpWriterDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PacketSender.ui">
@@ -134,6 +167,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="TrafficLoggerWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ClientListWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TcpWriterDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

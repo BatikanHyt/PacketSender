@@ -113,6 +113,7 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientListWidget.cpp" />
     <ClCompile Include="ConnectionWidget.cpp" />
     <ClCompile Include="FileDataHandler.cpp" />
     <ClCompile Include="FileDataMessage.cpp" />
@@ -126,10 +127,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PacketSender.cpp" />
     <ClCompile Include="PacketSenderWidget.cpp" />
+    <ClCompile Include="QHexEdit\chunks.cpp" />
+    <ClCompile Include="QHexEdit\commands.cpp" />
+    <ClCompile Include="QHexEdit\qhexedit.cpp" />
     <ClCompile Include="RawDataHandler.cpp" />
     <ClCompile Include="RawDataMessage.cpp" />
     <ClCompile Include="TcpClientHandler.cpp" />
     <ClCompile Include="TcpServerHandler.cpp" />
+    <ClCompile Include="TcpWriterDialog.cpp" />
     <ClCompile Include="TrafficLoggerWidget.cpp" />
     <ClCompile Include="UdpHandler.cpp" />
   </ItemGroup>
@@ -137,14 +142,18 @@
     <QtMoc Include="PacketSender.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="ClientListWidget.ui" />
     <QtUic Include="ConnectionWidget.ui" />
     <QtUic Include="LogWidget.ui" />
     <QtUic Include="PacketSender.ui" />
     <QtUic Include="PacketSenderWidget.ui" />
+    <QtUic Include="TcpWriterDialog.ui" />
     <QtUic Include="TrafficLoggerWidget.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="PacketSender.qrc" />
+    <QtRcc Include="PacketSender.qrc">
+      <SubType>Designer</SubType>
+    </QtRcc>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSenderWidget.h">
@@ -175,6 +184,14 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="TcpWriterDialog.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="ClientListWidget.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <ClInclude Include="FileDataHandler.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
@@ -187,6 +204,18 @@
     <ClInclude Include="PacketSenderMessage.h" />
     <ClInclude Include="FileSenderMessageType.h" />
     <ClInclude Include="FileStartMessage.h" />
+    <QtMoc Include="QHexEdit\chunks.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="QHexEdit\commands.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="QHexEdit\qhexedit.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <ClInclude Include="RawDataHandler.h" />
     <ClInclude Include="RawDataMessage.h" />
     <QtMoc Include="TrafficLoggerWidget.h">

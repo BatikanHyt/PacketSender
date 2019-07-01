@@ -40,7 +40,7 @@ public slots:
 
 	void onWriteToTcpClient(QByteArray &data,QString info);
 
-	void onWriteToTcpServer(QByteArray &data,QString info);
+	void onWriteToTcpServer(QByteArray &data,int socketId);
 
 	void onClientDisconnected(QString protocol, QString info);
 

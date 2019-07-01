@@ -71,7 +71,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Method</string>
+       <string>Protocol</string>
       </property>
      </column>
      <column>

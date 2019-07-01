@@ -101,7 +101,7 @@ void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 		items.direction = "Tx";
 		items.method = "TCP";
 		items.fromIp = "You";
-		items.fromPort = tcpSocket->peerPort();
+		items.fromPort = tcpSocket->localPort();
 		items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
 
 		TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
@@ -111,7 +111,19 @@ void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 
 void TcpClientHandler::handleReadyRead()
 {
+	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
+	QByteArray data = tcpSocket->readAll();
+	TrafficLogsItems logItems;
+	logItems.toIp = "You";
+	logItems.toPort = tcpSocket->localPort();
+	logItems.fromIp = tcpSocket->peerAddress().toString();
+	logItems.fromPort = tcpSocket->peerPort();
+	logItems.method = "TCP";
+	logItems.direction = "Rx";
+	logItems.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
 
+	TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(logItems);
+	qDebug() << "Client receive message" << data;
 }
 
 void TcpClientHandler::handleDisconnected()

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtCore/QObject>
-
 class FileSender
 	: public QObject
 {

@@ -134,9 +134,9 @@ void ConnectionWidget::onWriteToTcpClient(QByteArray &data,QString info)
 	mTcpClientHandler->writeToSocket(data,info);
 }
 
-void ConnectionWidget::onWriteToTcpServer(QByteArray & data,QString info)
+void ConnectionWidget::onWriteToTcpServer(QByteArray & data,int socketId)
 {
-	mTcpServerHandler->writeToClient(data,info);
+	mTcpServerHandler->writeToClient(data,socketId);
 }
 
 void ConnectionWidget::onClientDisconnected(QString protocol, QString info)

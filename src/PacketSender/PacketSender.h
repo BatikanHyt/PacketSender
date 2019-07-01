@@ -7,7 +7,9 @@
 #include "ConnectionWidget.h"
 #include "TrafficLoggerWidget.h"
 #include "LogWidget.h"
+#include "ClientListWidget.h"
 #include <QtWidgets/QTextEdit>
+#include "TcpWriterDialog.h"
 
 class QTreeWidget;
 class PacketSender : public QMainWindow
@@ -49,6 +51,8 @@ private:
 	ConnectionWidget* mConWidget;
 
 	static LogWidget* mLoggerWidget;
+
+	ClientListWidget* mClientListWidget;
 
 	QSet<QString> mServerList;
 

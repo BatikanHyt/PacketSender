@@ -3,15 +3,18 @@
 #include <QDebug>
 #include <QtCore/QFile>
 
+
 LogWidget* PacketSender::mLoggerWidget;
 
 PacketSender::PacketSender(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	QApplication::setStyle(QStyleFactory::create("fusion"));
 	ui.statusBar->setStyleSheet("background-color: rgb(76, 76, 76);");
 	mPackWidget = new PacketSenderWidget();
 	mConWidget = new ConnectionWidget();
+	mClientListWidget = ClientListWidget::getClientListWidget();
 	mTrafficLogger = TrafficLoggerWidget::getLoggerWidget();
 	if (mLoggerWidget == 0)
 	{
@@ -65,10 +68,11 @@ PacketSender::PacketSender(QWidget *parent)
 		&LogWidget::logInternal);
 
 	QGridLayout *layout = new QGridLayout;
-	layout->addWidget(mPackWidget,0,0);
-	layout->addWidget(mConWidget,0,1,Qt::AlignRight);
-	layout->addWidget(mTrafficLogger, 1, 0, 1, 0);
-	layout->addWidget(mLoggerWidget,2,0,2,0);
+	layout->addWidget(mPackWidget,0,0,2,1);
+	layout->addWidget(mConWidget,0,1,1,1);
+	layout->addWidget(mClientListWidget, 1,1,1,1);
+	layout->addWidget(mTrafficLogger,2,0,1,2);
+	layout->addWidget(mLoggerWidget,3,0,1,2);
 
 	ui.centralWidget->setLayout(layout);
 	ui.centralWidget->setContentsMargins(0,0,0,0);

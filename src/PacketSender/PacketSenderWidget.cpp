@@ -13,7 +13,7 @@ PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	, mUseTcp(false)
 {
 	ui.setupUi(this);
-	QRegExp rx("[a-fA-F0-9]*");
+	QRegExp rx("([a-fA-F0-9]*\\s?)*");
 	QRegExpValidator *v = new QRegExpValidator(rx,this);
 	ui.leHex->setValidator(v);
 }
@@ -157,7 +157,24 @@ void PacketSenderWidget::toHexFormat(QString &hex)
 void PacketSenderWidget::on_leData_editingFinished()
 {
 	QString text = ui.leData->text();
-	QByteArray arr = text.toUtf8().toHex().toUpper();
+	QByteArray arr;
+	for (int i = 0; i < text.size(); i++)
+	{
+		if (text.at(i) == '\\')
+		{
+			if (text.at(i + 1) == 'x')
+			{
+				arr.push_back(text.mid(i+2, 2).toUtf8().toUpper());
+				i += 3;
+			}
+		}
+		else
+		{
+			arr.push_back(text.mid(i, 1).toUtf8().toHex().toUpper());
+		}
+			
+	}
+	//QByteArray arr = text.toUtf8().toHex().toUpper();
 	QString hex = arr;
 	toHexFormat(hex);
 	ui.leHex->setText(hex);
@@ -166,44 +183,40 @@ void PacketSenderWidget::on_leData_editingFinished()
 void PacketSenderWidget::on_leHex_editingFinished()
 {
 	QString text = ui.leHex->text();
+	text.replace(" ", "");
 	QString hexFormatted;
 	QString normalizedText = "";
-	for (int i = text.size()-1; i >=0; i -=2)
+	for (int i = 0; i <= text.size() - 1; i +=2)
 	{
-		int prev = i - 1;
-		QString str = text.mid(prev, 2);
+		//int prev = i - 1;
+		QString str = text.mid(i, 2);
 		int number = str.toInt(nullptr,16);
 		if ((number < 32 && number >= 0) || number >126)
 		{
-			qDebug() << "Number: " << number;
 			if (number < 10)
 			{
-				hexFormatted.push_front(str);
+				hexFormatted.push_back(str);
 				if (str.size() == 1)
-				hexFormatted.push_front("0");
+				hexFormatted.push_back("0");
 				if (i >= 2)
-				hexFormatted.push_front(" ");
-				str = "\\0" + QString::number(number);
-				normalizedText.push_front(str);
+				hexFormatted.push_back(" ");
+				str = "\\x"+QString::number(number) + "0";
+				normalizedText.push_back(str);
 			}
 			else
 			{
-				hexFormatted.push_front(str);
-				if (i >= 2)
-				hexFormatted.push_front(" ");
-				str.push_front("\\");
-				normalizedText.push_front(str);
+				hexFormatted.push_back(str);
+				hexFormatted.push_back(" ");
+				str.push_front("\\x");
+				normalizedText.push_back(str);
 			}
 		}
 		else
 		{
-			hexFormatted.push_front(str);
-			if (i >= 2)
-			{
-				hexFormatted.push_front(" ");
-			}
+			hexFormatted.push_back(str);
+			hexFormatted.push_back(" ");
 			QByteArray arr = str.toUtf8();
-			normalizedText.push_front(QByteArray::fromHex(arr));
+			normalizedText.push_back(QByteArray::fromHex(arr));
 		}
 	}
 	ui.leHex->setText(hexFormatted);
@@ -285,6 +298,7 @@ void PacketSenderWidget::initializeConnectionList()
 			}
 		}
 	}
+
 }
 
 void PacketSenderWidget::initializeFileData(QString fileName)
