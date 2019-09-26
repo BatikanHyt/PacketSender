@@ -111,6 +111,9 @@
     <ClCompile Include="TcpWriterDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DataViewerDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="PacketSender.h">
@@ -152,6 +155,9 @@
     <QtMoc Include="TcpWriterDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="DataViewerDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="PacketSender.ui">
@@ -173,6 +179,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="TcpWriterDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DataViewerDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

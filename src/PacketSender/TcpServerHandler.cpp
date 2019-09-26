@@ -180,7 +180,7 @@ void TcpServerHandler::handleReadyRead()
 					return;
 				}
 				content = mBuffer.mid(0, len + 3);
-
+				logItems.data = content;
 				PacketSenderHandler* handler = mHandlerHash.value(messageType);
 				if (handler != 0)
 				{
@@ -218,6 +218,7 @@ void TcpServerHandler::handleReadyRead()
 			}
 			else
 			{
+				logItems.data = mBuffer;
 				mBuffer.remove(0, mBuffer.size());
 				dataStream.skipRawData(mBuffer.size());
 			}
@@ -239,6 +240,10 @@ void TcpServerHandler::handleDisconnected()
 		tcpSocket->disconnect();
 		tcpSocket->close();
 		tcpSocket->deleteLater();
+
+		ClientInfo info;
+		info.socketId = socketId;
+		mClientWidget->clientDisconnected(info);
 		qDebug() << "Disconnected socket id " << socketId;
 
 	}
@@ -281,6 +286,7 @@ void TcpServerHandler::writeToClient(QByteArray data,int socketId)
 		items.fromIp = "You";
 		items.fromPort = clientSocket->localPort();
 		items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+		items.data = data;
 
 		TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
 	}

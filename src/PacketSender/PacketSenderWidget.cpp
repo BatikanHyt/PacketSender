@@ -7,6 +7,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QHashIterator>
 #include <QRegExpValidator>
+#include <QtCore/QTimer>
 
 PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	: QWidget(parent)
@@ -16,6 +17,8 @@ PacketSenderWidget::PacketSenderWidget(QWidget *parent)
 	QRegExp rx("([a-fA-F0-9]*\\s?)*");
 	QRegExpValidator *v = new QRegExpValidator(rx,this);
 	ui.leHex->setValidator(v);
+
+	ui.pbStartTransfer->setDisabled(true);
 }
 
 PacketSenderWidget::~PacketSenderWidget()
@@ -104,7 +107,7 @@ void PacketSenderWidget::on_pbStartTransfer_clicked()
 				mDelay = ui.sbMessageDelay->value();
 				mDataPartSize = ui.cbMessageSize->currentText().toInt();
 				mDataPartSize -= fileName.size();
-				int id = startTimer(mDelay);
+				int id = startTimer(mDelay,Qt::PreciseTimer);
 
 				mSendInfoHash.insert(id, selectedConnectionInfo);
 				mFileHash.insert(id, fileName);
@@ -298,7 +301,14 @@ void PacketSenderWidget::initializeConnectionList()
 			}
 		}
 	}
-
+	if (ui.cbConnectionList->count() > 0)
+	{
+		ui.pbStartTransfer->setDisabled(false);
+	}
+	else
+	{
+		ui.pbStartTransfer->setDisabled(true);
+	}
 }
 
 void PacketSenderWidget::initializeFileData(QString fileName)

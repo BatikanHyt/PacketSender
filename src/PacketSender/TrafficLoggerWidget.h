@@ -14,8 +14,8 @@ struct TrafficLogsItems
 	QString time;
 	QString method;
 	QString direction;
+	QByteArray data;
 };
-
 Q_DECLARE_METATYPE(TrafficLogsItems);
 
 class TrafficLoggerWidget : public QWidget
@@ -35,6 +35,8 @@ public slots:
 	void updateTrafficLoggerInternal(TrafficLogsItems items);
 
 	void on_pbClearLog_clicked();
+
+	void onCellDoubleClicked(int row, int col);
 
 private:
 	

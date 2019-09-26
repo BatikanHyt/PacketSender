@@ -74,9 +74,9 @@ void LogWidget::logInternal(QString msg)
 	if (1 == ui.tableWidget->rowCount())
 	{
 		ui.tableWidget->resizeColumnsToContents();
-		//ui.tableWidget->resizeRowsToContents();
 		ui.tableWidget->horizontalHeader()->setStretchLastSection(true);
 	}
+	ui.tableWidget->resizeRowsToContents();
 
 }
 

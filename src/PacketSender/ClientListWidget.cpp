@@ -41,6 +41,30 @@ void ClientListWidget::updateClientList(ClientInfo info)
 		Q_ARG(ClientInfo, info));
 }
 
+void ClientListWidget::clientDisconnected(ClientInfo info)
+{
+	QMetaObject::invokeMethod(this,
+		"clientDisconnectedInternal",
+		Q_ARG(ClientInfo, info));
+}
+
+void ClientListWidget::clientDisconnectedInternal(ClientInfo info)
+{
+	int rowCount = ui.tableWidget->rowCount();
+	for (int i = 0; i < rowCount; ++i)
+	{
+		QTableWidgetItem* item = ui.tableWidget->item(i, 0);
+		if (item != 0)
+		{
+			if (item->data(Qt::UserRole) == info.socketId)
+			{
+				ui.tableWidget->removeRow(i);
+				break;
+			}
+		}
+	}
+}
+
 void ClientListWidget::updateClientListInternal(ClientInfo info)
 {
 	QTableWidgetItem* hostIpItem = new QTableWidgetItem(info.hostIp);

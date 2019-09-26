@@ -27,6 +27,8 @@ public:
 
 	void updateClientList(ClientInfo info);
 
+	void clientDisconnected(ClientInfo info);
+
 public slots:
 
 	void updateClientListInternal(ClientInfo info);
@@ -38,6 +40,9 @@ public slots:
 	void disconnectClientEvent();
 
 	void messageEvent(QByteArray data);
+
+	void clientDisconnectedInternal(ClientInfo info);
+
 signals:
 
 	void disconnectClient(int socketId);
