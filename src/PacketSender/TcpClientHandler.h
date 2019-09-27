@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QtCore/QHash>
+#include <QtCore/QMutex>
 
 class QHostAddress;
 class QThread;
@@ -39,5 +40,7 @@ private:
 	int mSocketId;
 
 	QHash<int, QTcpSocket*> mSocketMap;
+
+	QMutex mMutex;
 };
 

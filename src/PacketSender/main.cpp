@@ -4,6 +4,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
+#include <QtWidgets/QDesktopWidget>
 
 static QMutex staticMutex;
 
@@ -63,6 +64,8 @@ int main(int argc, char *argv[])
 	qInstallMessageHandler(myMessageOutput);
 	QApplication a(argc, argv);
 	PacketSender w;
+	w.adjustSize();
+	w.move(QApplication::desktop()->screen()->rect().center() - w.rect().center());
 	//w.showMaximized();
 	w.show();
 	return a.exec();

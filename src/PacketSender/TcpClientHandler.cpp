@@ -2,6 +2,7 @@
 
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostAddress>
+#include <QtCore/QMutexLocker>
 
 #include <QtCore/QThread>
 #include <QtCore/QTime>
@@ -66,12 +67,13 @@ bool TcpClientHandler::createTcpClientConnection(QString hostAddr, int port)
 
 void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 {
+	QMutexLocker locker(&mMutex);
 	//Parsing The Info
 	info.replace(":", " ");
 	QStringList infoList = info.split(" ");
 	QString hostAddress = infoList.at(0);
 	int portNumber = infoList.at(1).toInt();
-	QTcpSocket* tcpSocket;
+	int socketId = -1;
 	QHashIterator<int, QTcpSocket*>itor(mSocketMap);
 	while (itor.hasNext())
 	{
@@ -80,32 +82,38 @@ void TcpClientHandler::writeToSocket(QByteArray &data,QString info)
 		int port = itor.value()->property("PeerPort").toInt();
 		if (portNumber == port && hostAddress.contains(address))
 		{
-			tcpSocket = itor.value();
+			socketId = itor.key();
 			break;
 		}
 	}
-
-	if (0 != tcpSocket)
+	if (mSocketMap.contains(socketId))
 	{
-		int written = tcpSocket->write(data,data.size());
-		if (written != data.size())
+		QTcpSocket* tcpSocket = mSocketMap.value(socketId, 0);
+		if (0 != tcpSocket)
 		{
-			qWarning() << "Could not write data.";
-		}
-		tcpSocket->flush();
-		tcpSocket->waitForBytesWritten(3000);
-		//Logging
-		TrafficLogsItems items;
-		items.toIp = tcpSocket->peerAddress().toString();
-		items.toPort = tcpSocket->peerPort();
-		items.direction = "Tx";
-		items.method = "TCP";
-		items.fromIp = "You";
-		items.fromPort = tcpSocket->localPort();
-		items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
-		items.data = data;
+			if (tcpSocket->state() == QAbstractSocket::ConnectedState)
+			{
+				int written = tcpSocket->write(data, data.size());
+				if (written != data.size())
+				{
+					qWarning() << "Could not write data.";
+				}
+				tcpSocket->flush();
+				tcpSocket->waitForBytesWritten(3000);
+				//Logging
+				TrafficLogsItems items;
+				items.toIp = tcpSocket->peerAddress().toString();
+				items.toPort = tcpSocket->peerPort();
+				items.direction = "Tx";
+				items.method = "TCP";
+				items.fromIp = "You";
+				items.fromPort = tcpSocket->localPort();
+				items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+				items.data = data;
 
-		TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
+				TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
+			}
+		}
 	}
 }
 
@@ -133,6 +141,7 @@ void TcpClientHandler::handleReadyRead()
 
 void TcpClientHandler::handleDisconnected()
 {
+	QMutexLocker locker(&mMutex);
 	QTcpSocket* tcpSocket = qobject_cast<QTcpSocket*>(sender());
 	if (0 != tcpSocket)
 	{

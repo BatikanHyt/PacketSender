@@ -194,6 +194,7 @@ void UdpHandler::onReadyRead()
 			items.direction = "Rx";
 			items.method = "UDP";
 			items.time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+			items.data = readData;
 
 			TrafficLoggerWidget::getLoggerWidget()->updateTrafficLogger(items);
 		}
